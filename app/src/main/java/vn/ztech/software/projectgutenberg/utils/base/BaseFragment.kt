@@ -8,9 +8,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<T: ViewBinding>(private val inflate: (LayoutInflater)-> T): Fragment() {
+abstract class BaseFragment<T : ViewBinding>(private val inflate: (LayoutInflater) -> T) :
+    Fragment() {
 
-    private var binding: T? = null
+    protected var binding: T? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -11,7 +11,7 @@ class HomeContract {
         fun onError(e: Exception?)
     }
 
-    interface Presenter: BasePresenter<View>{
+    interface Presenter : BasePresenter<View> {
         fun getBooks()
     }
 }

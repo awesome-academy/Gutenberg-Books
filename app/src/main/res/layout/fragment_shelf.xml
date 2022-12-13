@@ -3,16 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".screen.home.HomeFragment">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FRAGMENT HOME"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textSize="@dimen/sp_26"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:text="FRAGMENT SHELF"
+        android:textSize="@dimen/sp_26"/>
 </FrameLayout>
 

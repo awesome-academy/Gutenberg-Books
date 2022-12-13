@@ -7,11 +7,11 @@ import java.lang.Exception
 
 class HomePresenter internal constructor(
     private val bookRepository: BookRepository
-): HomeContract.Presenter {
+) : HomeContract.Presenter {
     private var mView: HomeContract.View? = null
 
     override fun getBooks() {
-        bookRepository.getBooks(object : OnResultListener<List<Book>>{
+        bookRepository.getBooks(object : OnResultListener<List<Book>> {
             override fun onSuccess(data: List<Book>) {
                 mView?.onGetBooksSuccess(data)
             }
