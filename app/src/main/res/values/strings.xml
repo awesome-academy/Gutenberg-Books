@@ -11,4 +11,23 @@
     <string name="dialog_message_quit_app">By confirming, you will exit the app!</string>
     <string name="exception_parse_json">Wrong json object type</string>
     <string name="search_bar_placeholder_text_book">Search books...</string>
+    <string name="format_author">By %1s</string>
+    <string name="download">Download</string>
+    <string name="preview">Preview</string>
+    <string name="same_author">Same author</string>
+    <string name="same_bookshelf">Same bookshelf</string>
+    <string name="format_count"> (%1d)</string>
+    <string name="format_donwload_noti_title">Download: %1s</string>
+    <string name="format_donwload_noti_description">Download description: %1s</string>
+    <string name="dialog_msg_file_existed">File exisited</string>
+    <string name="format_file_existed">This version of the book %1s existed</string>
+    <string name="dialog_msg_download_confirm_title">Download book</string>
+    <string name="dialog_msg_download_confirm_description">Do you want to download %1s?</string>
+    <string name="format_downloading_snackbar">Downloading %1s</string>
+    <string name="OK">OK</string>
+    <string name="view">view</string>
+    <string name="dialog_title_permission">Permission required</string>
+    <string name="dialog_message_permission">Permission required to download this book</string>
+    <string name="dialog_button_allow">Allow</string>
+    <string name="dialog_button_deny">Deny</string>
 </resources>

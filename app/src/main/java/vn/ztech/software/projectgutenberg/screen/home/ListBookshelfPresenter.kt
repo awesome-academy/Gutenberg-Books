@@ -12,7 +12,9 @@ class ListBookshelfPresenter internal constructor(
     private var mView: ListBookshelfContract.View? = null
 
     override fun getBookshelves() {
-        mView?.updateLoading(Constant.LoadingArea.HomeBookshelf, Constant.LoadingState.SHOW)
+        // This page variable is for testing
+        // delete this variable or replace with a proper implementation later
+        mView?.updateLoading(Constant.LoadingAreaHome.HomeBookshelf, Constant.LoadingState.SHOW)
         /** Get random page */
         val page = (Math.random() * Constant.PAGE_NUMBER_RANDOM_RANGE).toInt() + Constant.FIRST_PAGE
         bookshelfRepository.getBookshelves(
@@ -21,14 +23,14 @@ class ListBookshelfPresenter internal constructor(
                 override fun onSuccess(data: BaseAPIResponse<Bookshelf>) {
                     mView?.onGetBookshelvesSuccess(data.results)
                     mView?.updateLoading(
-                        Constant.LoadingArea.HomeBookshelf,
+                        Constant.LoadingAreaHome.HomeBookshelf,
                         Constant.LoadingState.HIDE
                     )
                 }
 
                 override fun onError(e: Exception?) {
                     mView?.updateLoading(
-                        Constant.LoadingArea.HomeBookshelf,
+                        Constant.LoadingAreaHome.HomeBookshelf,
                         Constant.LoadingState.HIDE
                     )
                     mView?.onError(e)

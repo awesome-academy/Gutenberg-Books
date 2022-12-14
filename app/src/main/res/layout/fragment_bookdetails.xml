@@ -1,20 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<FrameLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/colorOnPrimary"
-    tools:context=".screen.favorite.FavoriteFragment">
-    <TextView
-        android:id="@+id/tv_test"
-        android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorOnPrimary"
+            android:clickable="true"
+            android:focusable="true"
+            tools:context=".screen.favorite.FavoriteFragment">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_book_details"
+                app:layout_constraintBottom_toBottomOf="@id/layout_book_details_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_book_cover"
+                android:layout_width="@dimen/dp_140"
+                android:layout_height="@dimen/dp_260"
+                android:elevation="@dimen/dp_8"
+                app:cardCornerRadius="@dimen/dp_4"
+                android:layout_marginTop="@dimen/dp_32"
+                app:layout_constraintEnd_toEndOf="@id/guide_vertical_2"
+                app:layout_constraintStart_toStartOf="@id/guide_vertical_1"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_book_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/splash" />
+            </androidx.cardview.widget.CardView>
+
+            <include
+                android:id="@+id/layout_book_details_info"
+                layout="@layout/layout_book_details_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/card_book_cover" />
+
+            <include
+                android:id="@+id/layout_list_book_horizontal_same_author"
+                layout="@layout/layout_list_books_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_book_details_info" />
+
+            <include
+                android:id="@+id/layout_list_book_horizontal_same_bookshelf"
+                layout="@layout/layout_list_books_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_list_book_horizontal_same_author" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guide_horizontal_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.4" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guide_horizontal_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guide_vertical_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guide_vertical_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.8" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+    <include
+        android:id="@+id/layout_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FRAGMENT BOOK DETAILS"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="@dimen/sp_26"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        layout="@layout/layout_toolbar"
+        />
 </FrameLayout>
+
 

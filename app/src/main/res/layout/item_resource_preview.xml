@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_resource_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_12"
+        android:layout_weight="3"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:padding="@dimen/dp_4"
+        android:text="@string/preview"
+        android:textAlignment="textStart"
+        android:textColor="?attr/colorPrimaryDark"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_weight="7"
+        android:id="@+id/tv_resource_uri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_12"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:textSize="@dimen/sp_12"
+        android:drawableEnd="@drawable/ic_preview_24"
+        tools:text="HTML" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_vertical_1_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+</LinearLayout>

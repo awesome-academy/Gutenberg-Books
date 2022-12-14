@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:weightSum="10"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_resource_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_12"
+        android:padding="@dimen/dp_4"
+        android:gravity="center"
+        android:textColor="?attr/colorPrimaryDark"
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold"
+        android:text="@string/download" />
+
+    <TextView
+        android:id="@+id/tv_resource_uri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_12"
+        android:padding="@dimen/dp_4"
+        android:textAlignment="center"
+        android:textSize="@dimen/sp_12"
+        tools:text="epub"
+        app:drawableEndCompat="@drawable/ic_menu_download_resource" />
+</LinearLayout>

@@ -17,6 +17,14 @@ class BookRepository private constructor(
         remote.getBooks(page, listener)
     }
 
+    override fun getBooksWithFilters(
+        page: Int,
+        filters: Map<BookDataSource.Companion.BookFilter, String>,
+        listener: OnResultListener<BaseAPIResponse<Book>>,
+    ) {
+        remote.getBooksWithFilters(page, filters, listener)
+    }
+
     companion object {
         private var instance: BookRepository? = null
 

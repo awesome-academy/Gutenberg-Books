@@ -18,6 +18,18 @@ class BookRemoteDataSource : BookDataSource.Remote {
         )
     }
 
+    override fun getBooksWithFilters(
+        page: Int,
+        filters: Map<BookDataSource.Companion.BookFilter, String>,
+        listener: OnResultListener<BaseAPIResponse<Book>>,
+    ) {
+        NetworkCall(
+            urlString = APIQuery.getBooksWithFilterAPI(page, filters),
+            listener,
+            ModelCommon.BOOK
+        )
+    }
+
     companion object {
         private var instance: BookRemoteDataSource? = null
 
