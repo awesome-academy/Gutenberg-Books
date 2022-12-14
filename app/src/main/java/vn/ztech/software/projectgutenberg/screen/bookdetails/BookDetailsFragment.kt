@@ -3,25 +3,19 @@ package vn.ztech.software.projectgutenberg.screen.bookdetails
 import android.app.DownloadManager
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import com.bumptech.glide.manager.SupportRequestManagerFragment
 import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.Agent
 import vn.ztech.software.projectgutenberg.data.model.BaseData
 import vn.ztech.software.projectgutenberg.data.model.Book
+import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.repository.source.remote.api.APIQuery
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookDataSource
 import vn.ztech.software.projectgutenberg.databinding.FragmentBookdetailsBinding
 import vn.ztech.software.projectgutenberg.di.getListBookPresenter
-import vn.ztech.software.projectgutenberg.screen.MainActivity
-import vn.ztech.software.projectgutenberg.screen.bookshelf.BookshelfFragment
-import vn.ztech.software.projectgutenberg.screen.download.DownloadFragment
-import vn.ztech.software.projectgutenberg.screen.favorite.FavoriteFragment
-import vn.ztech.software.projectgutenberg.screen.home.HomeFragment
 import vn.ztech.software.projectgutenberg.screen.home.ListBookAdapter
 import vn.ztech.software.projectgutenberg.screen.home.ListBookContract
 import vn.ztech.software.projectgutenberg.screen.home.ListBookPresenter
@@ -43,11 +37,19 @@ import vn.ztech.software.projectgutenberg.utils.extension.toast
 
 class BookDetailsFragment
     : BaseFragment<FragmentBookdetailsBinding>(FragmentBookdetailsBinding::inflate),
-    ListResourceAdapter.OnClickListener, ListBookContract.View, ListBookAdapter.OnClickListener {
+    ListResourceAdapter.OnClickListener, ListBookContract.View {
 
     private lateinit var listBookPresenter: ListBookPresenter
-    private var listBookAdapterSameAuthor: ListBookAdapter = ListBookAdapter(this)
-    private var listBookAdapterSameBookshelf: ListBookAdapter = ListBookAdapter(this)
+    private var listBookAdapterSameAuthor = ListBookAdapter { book ->
+        openFragment(
+            BookDetailsFragment.newInstance(bundleOf(BUNDLE_BOOK to book))
+        )
+    }
+    private var listBookAdapterSameBookshelf = ListBookAdapter { book ->
+        openFragment(
+            BookDetailsFragment.newInstance(bundleOf(BUNDLE_BOOK to book))
+        )
+    }
     private val listResourceAdapter = ListResourceAdapter(this)
     private var book: Book? = null
     private var showableAgent: Agent? = null
@@ -83,7 +85,9 @@ class BookDetailsFragment
                     showableAgent = it
                 }
                 tvMetaData.text = mBook.getAvailableMetadata()
-                tvDescriptionContent.text = mBook.description
+                if (!mBook.description.isNullOrEmpty() && mBook.description != Constant.STRING_NULL) {
+                    tvDescriptionContent.text = mBook.description
+                }
 
                 recyclerListResource.adapter = listResourceAdapter
                 listResourceAdapter.setData(mBook.resources.getResourcesWithKind())
@@ -165,6 +169,13 @@ class BookDetailsFragment
                 }
             }
         }
+    }
+
+    override fun onGetRecentReadingBookSuccess(
+        data: List<BookLocal>,
+        loadingArea: Constant.LoadingArea
+    ) {
+        //todo leave blank
     }
 
     override fun onError(e: Exception?) {
@@ -263,46 +274,28 @@ class BookDetailsFragment
                     DownloadManager.STATUS_SUCCESSFUL -> {
                         context?.showSnackBar(
                             it,
-                            status.statusToMsg() + if (reason != 0) "\nReason: ${reason.reasonToMsg()}" else "",
+                            status.statusToMsg() +
+                                    if (reason != 0) "\nReason: ${reason.reasonToMsg()}" else "",
                             resources.getString(R.string.view)
                         ) {
                             /**Move to download fragment*/
-                            clearFragments()
-                            (activity as MainActivity?)?.binding?.bottomNavigationView?.selectedItemId =
-                                R.id.menu_download
+                            moveToTab(R.id.menu_download)
                         }
                     }
                     else -> {
                         context?.showSnackBar(
                             it,
-                            status.statusToMsg() + if (reason != 0) "\nReason: ${reason.reasonToMsg()}" else "",
+                            status.statusToMsg() +
+                                    if (reason != 0) "\nReason: ${reason.reasonToMsg()}" else "",
                             resources.getString(R.string.OK)
                         ) {}
+                        context?.toast((status.statusToMsg() +
+                                if (reason != 0) "\nReason: ${reason.reasonToMsg()}" else ""))
                     }
                 }
 
             }
         }
-    }
-
-    private fun clearFragments() {
-        activity?.supportFragmentManager?.fragments?.let {
-            Log.d("FRAGMENTXXXxxxx", fragmentsShouldNotClear.toString())
-
-            for (fragment in it) {
-                Log.d("FRAGMENTXXX", fragment::class.java.toString())
-                if (!(fragment::class.java in fragmentsShouldNotClear)) {
-                    activity?.supportFragmentManager?.beginTransaction()?.remove(fragment)?.commit()
-                }
-            }
-        }
-
-    }
-
-    override fun onItemClick(book: Book) {
-        openFragment(
-            BookDetailsFragment.newInstance(bundleOf(BUNDLE_BOOK to book))
-        )
     }
 
     companion object {
@@ -315,12 +308,6 @@ class BookDetailsFragment
 
         const val BUNDLE_BOOK = "BUNDLE_BOOK"
         const val BUNDLE_BOOK_PREVIEW_URL = "BUNDLE_BOOK_PREVIEW_URL"
-        val fragmentsShouldNotClear = listOf<Class<*>>(
-            HomeFragment::class.java,
-            BookshelfFragment::class.java,
-            DownloadFragment::class.java,
-            FavoriteFragment::class.java,
-            SupportRequestManagerFragment::class.java
-        )
+
     }
 }

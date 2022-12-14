@@ -11,5 +11,6 @@ object BookReadingContract {
         const val COLUMN_NAME_TOC_ITEM_HREF = "toc_href"
         const val COLUMN_NAME_TOC_ITEM_MIME_TYPE = "mime_type"
         const val COLUMN_NAME_PROGRESS = "progress"
+        const val COLUMN_NAME_IS_LATEST_READING = "is_latest_reading"
     }
 }

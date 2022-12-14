@@ -7,56 +7,75 @@ import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
 import vn.ztech.software.projectgutenberg.data.model.epub.Toc
+import vn.ztech.software.projectgutenberg.data.model.epub.TocItem
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 
 interface BookDataSource {
 
     interface Local {
 
-        fun getBooksLocal(offset: Int, listener: OnResultListener<List<BookLocal>>)
+        interface Writable {
+            fun unzipBook(
+                context: Context?,
+                book: BookLocal,
+                onResultListener: OnResultListener<String>
+            )
 
-        fun scanLocalStorage(
-            context: Context, onResultListener: OnResultListener<Boolean>
-            = object : OnResultListener<Boolean> {
-                    override fun onSuccess(data: Boolean) { // todo leave blank
+
+            fun updateBookImageUrl(res: Resource, fileTitle: String, imgUrl: String)
+
+            fun deleteBookLocal(
+                context: Context,
+                bookLocal: BookLocal,
+                listener: OnResultListener<Boolean>
+            )
+
+
+            fun updateReadingProgress(
+                bookId: Int,
+                href: String,
+                readingProgressString: String,
+                listener: OnResultListener<Boolean>
+            )
+
+            fun updateLatestReadingTocItem(tocItem: TocItem)
+
+            fun storeTocToDB(
+                book: BookLocal,
+                epubFile: EpubFile,
+                onResultListener: OnResultListener<EpubFile>
+            )
+
+            fun markBookAsPrepared(book: BookLocal)
+        }
+
+        interface Readable {
+            fun getBooksLocal(offset: Int, listener: OnResultListener<List<BookLocal>>)
+
+            fun scanLocalStorage(
+                context: Context, onResultListener: OnResultListener<Boolean>
+                = object : OnResultListener<Boolean> {
+                        override fun onSuccess(data: Boolean) { // todo leave blank
+                        }
+
+                        override fun onError(e: Exception?) { // todo leave blank
+                        }
                     }
+            )
 
-                    override fun onError(e: Exception?) { // todo leave blank
-                    }
-                }
-        )
+            fun parseEpub(
+                providerUnzippedBookDirectoryPath: String,
+                book: BookLocal, onResultListener: OnResultListener<EpubFile>
+            )
 
-        fun updateBookImageUrl(res: Resource, fileTitle: String, imgUrl: String)
+            fun searchBookLocal(keyword: String, listener: OnResultListener<List<BookLocal>>)
 
-        fun deleteBookLocal(
-            context: Context,
-            bookLocal: BookLocal,
-            listener: OnResultListener<Boolean>
-        )
+            fun getToc(bookId: Int, onResultListener: OnResultListener<Toc>)
 
-        fun searchBookLocal(keyword: String, listener: OnResultListener<List<BookLocal>>)
+            fun getAllRecentReadingBook(onResultListener: OnResultListener<List<BookLocal>>)
 
-        fun unzipBook(
-            context: Context?,
-            book: BookLocal,
-            onResultListener: OnResultListener<String>
-        )
-
-        fun parseEpub(
-            providerUnzippedBookDirectoryPath: String,
-            book: BookLocal, onResultListener: OnResultListener<EpubFile>
-        )
-
-        fun markBookAsPrepared(book: BookLocal)
-
-        fun storeTocToDB(
-            book: BookLocal,
-            epubFile: EpubFile,
-            onResultListener: OnResultListener<EpubFile>
-        )
-
-        fun getToc(bookId: Int, onResultListener: OnResultListener<Toc>)
-
+            fun getBookWithLimit(limit: Int, onResultListener: OnResultListener<List<BookLocal>>)
+        }
     }
 
     interface Remote {

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/layout_network_lost"
+    android:background="@drawable/bg_internet_lost"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/iv_cat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cat"
+        app:layout_constraintBottom_toTopOf="@id/guideline"/>
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        android:textSize="@dimen/sp_26"
+        android:layout_margin="@dimen/dp_10"
+        android:textStyle="bold"
+        android:id="@+id/tv_oops"
+        android:text="@string/oops_no_internet_connection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/bt_read_book_offline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_negative"
+        android:elevation="@dimen/dp_10"
+        android:paddingHorizontal="@dimen/dp_15"
+        android:scaleType="center"
+        android:text="@string/bt_read_book_offline"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_margin="@dimen/dp_15"
+        app:layout_constraintEnd_toEndOf="@+id/tv_oops"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/tv_oops"
+        app:layout_constraintTop_toBottomOf="@+id/tv_oops"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,22 +6,18 @@ import androidx.recyclerview.widget.RecyclerView
 import vn.ztech.software.projectgutenberg.data.model.Bookshelf
 import vn.ztech.software.projectgutenberg.databinding.ItemBookshelfBinding
 
-class ListBookshelvesAdapter(private val listener: OnClickListener) :
+class ListBookshelvesAdapter(private val listener: (Bookshelf) -> Unit) :
     RecyclerView.Adapter<ListBookshelvesAdapter.BookViewHolder>() {
     private var bookshelves = mutableListOf<Bookshelf>()
 
-    interface OnClickListener {
-        fun onItemClick(bookshelf: Bookshelf)
-    }
-
     class BookViewHolder(
         private val binding: ItemBookshelfBinding,
-        private val listener: OnClickListener
+        private val listener: (Bookshelf) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(bookshelf: Bookshelf) {
             binding.apply {
                 tvBookshelf.text = bookshelf.name
-                root.setOnClickListener { listener.onItemClick(bookshelf) }
+                root.setOnClickListener { listener(bookshelf) }
             }
         }
     }

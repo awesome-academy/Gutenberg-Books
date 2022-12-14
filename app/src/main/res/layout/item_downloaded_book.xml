@@ -144,7 +144,7 @@
                 android:padding="@dimen/dp_4"
                 android:background="@drawable/bg_tv_prepare_book"
                 android:text="@string/tv_action_prepare_this_book"
-                app:layout_constraintBottom_toTopOf="@+id/progressBar"
+                app:layout_constraintBottom_toBottomOf="@id/card_image_cover_holder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/card_image_cover_holder"
                 tools:text="Prepare this book!" />
@@ -152,7 +152,7 @@
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/group_reading_progress"
                 android:layout_width="wrap_content"
-                tools:visibility="gone"
+                tools:visibility="visible"
                 app:constraint_referenced_ids="progressBar,
                 tv_recent_reading_percentage,
                 tv_reading_progress"
@@ -194,7 +194,7 @@
                 android:gravity="center"
                 android:textAlignment="center"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="8sp"
+                android:textSize="@dimen/sp_14"
                 app:layout_constraintBottom_toBottomOf="@id/card_image_cover_holder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/progressBar"

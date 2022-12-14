@@ -17,8 +17,10 @@ import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
-import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.BookContentProviderEntry
-import vn.ztech.software.projectgutenberg.di.getBookLocalDataSource
+import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.BookFilesProvider.Companion.BookContentProviderEntry
+import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.BookFilesProvider
+import vn.ztech.software.projectgutenberg.di.getBookLocalReadableDataSource
+import vn.ztech.software.projectgutenberg.di.getBookLocalWritableDataSource
 import vn.ztech.software.projectgutenberg.utils.Constant
 import vn.ztech.software.projectgutenberg.utils.Constant.DOWNLOAD_UPDATE_PROGRESS_SLEEP_TIME
 import java.io.File
@@ -120,12 +122,12 @@ fun Context.download(
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     downloading = false
                     Thread.sleep(BookContentProviderEntry.WAIT_TIME_BEFORE_FETCHING_NEWEST_DATA)
-                    getBookLocalDataSource(this).let { dataSource ->
+                    getBookLocalReadableDataSource(this).let { dataSource ->
                         dataSource.scanLocalStorage(
                             this@download,
                             object : OnResultListener<Boolean> {
                                 override fun onSuccess(data: Boolean) {
-                                    dataSource.updateBookImageUrl(
+                                    getBookLocalWritableDataSource(this@download).updateBookImageUrl(
                                         resource,
                                         this@download.getFileTitle(resource, book),
                                         book.resources.findCoverImageURL() ?: ""

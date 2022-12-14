@@ -13,7 +13,7 @@ object Constant {
     }
 
     interface LoadingArea {
-        enum class Common {
+        enum class Common : LoadingArea {
             NOT_SHOW_LOADING
         }
     }
@@ -23,7 +23,6 @@ object Constant {
         HomeBookshelf,
         HomeListBook,
         HomeLoadMoreBook,
-
     }
 
     enum class LoadingAreaBookDetail : LoadingArea {
@@ -70,7 +69,7 @@ object Constant {
         RDF("rdf", "rdf", ActionTypes.DEFAULT),
         ZIP("zip", ".zip", ActionTypes.DEFAULT),
     }
-
+    val supportedResources = listOf(ResourceKindClues.EPUB)
     enum class ActionTypes {
         PREVIEW, DOWNLOAD, DEFAULT
     }
@@ -98,4 +97,6 @@ object Constant {
     const val UNZIPPED_FOLDER_NAME = "Unzipped"
     const val ZIPPED_EBOOK_FOLDER = "Ebook"
     const val UTF_8 = "UTF-8"
+
+    const val ONE_HUNDRED_PERCENT = 100
 }

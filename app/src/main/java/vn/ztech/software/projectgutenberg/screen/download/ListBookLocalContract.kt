@@ -52,5 +52,6 @@ interface ListBookLocalContract {
         fun refresh()
         fun unzipBook(context: Context?, book: BookLocal)
         fun parseEpubFile(book: BookLocal, providerUnzippedBookDirectoryPath: String)
+        fun updateNewDataAndLoadMore(offset: Int)
     }
 }

@@ -2,13 +2,16 @@ package vn.ztech.software.projectgutenberg.utils.extension
 
 import android.content.Context
 import android.net.Uri
+import vn.ztech.software.projectgutenberg.data.model.epub.Settings
 import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.getProviderBasePath
+import vn.ztech.software.projectgutenberg.screen.readbook.WebViewHorizontal
 import vn.ztech.software.projectgutenberg.utils.Constant
+import vn.ztech.software.projectgutenberg.utils.Constant.ONE_HUNDRED_PERCENT
 import java.io.File
 import java.io.IOException
 
-fun getUnzipAbsolutePath(context: Context, bookTitle: String): String {
-    return getProviderBasePath(context) +
+fun getUnzipAbsolutePath(bookTitle: String): String {
+    return getProviderBasePath() +
             File.separator +
             Constant.UNZIPPED_FOLDER_NAME +
             File.separator +
@@ -32,6 +35,10 @@ fun String.concatPath(relativePath: String): String {
     }
 }
 
+fun getReadingProgressString(currentPage: Int, totalPage: Int): String {
+    return "${currentPage}/${totalPage}"
+}
+
 fun String.getParentPath(): String {
     return try {
         val path: String? = File(this).canonicalFile.parent
@@ -45,4 +52,12 @@ fun String.getParentPath(): String {
 fun String.getPath(): String {
     val uri = Uri.parse(this)
     return uri.path ?: ""
+}
+
+fun getTextSizeFromSeekBarValue(seekBarValue: Int?): Int {
+    if (seekBarValue == null) return Settings.DEFAULT_VALUE_NOT_EXIST
+    return WebViewHorizontal.DEFAULT_MIN_TEXT_SIZE +
+            ((WebViewHorizontal.DEFAULT_MAX_TEXT_SIZE -
+                    WebViewHorizontal.DEFAULT_MIN_TEXT_SIZE) *
+                    seekBarValue) / ONE_HUNDRED_PERCENT
 }

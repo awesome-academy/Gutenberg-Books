@@ -45,7 +45,8 @@ class BookDbHelper private constructor(context: Context?) :
                     "${BookReadingEntry.COLUMN_NAME_TOC_ITEM_TITLE} TEXT," +
                     "${BookReadingEntry.COLUMN_NAME_TOC_ITEM_HREF} TEXT," +
                     "${BookReadingEntry.COLUMN_NAME_TOC_ITEM_MIME_TYPE} TEXT," +
-                    "${BookReadingEntry.COLUMN_NAME_PROGRESS} INTEGER," +
+                    "${BookReadingEntry.COLUMN_NAME_PROGRESS} TEXT," +
+                    "${BookReadingEntry.COLUMN_NAME_IS_LATEST_READING} INTEGER," +
                     "PRIMARY KEY (${BaseColumns._ID}, ${BookReadingEntry.COLUMN_NAME_TOC_ITEM_HREF}))"
 
         /**Use id, toc_item_href as primary key*/

@@ -15,7 +15,7 @@ class ReadBookPresenter internal constructor(
         loadingArea: Constant.LoadingArea
     ) {
         mView?.updateLoading(loadingArea, Constant.LoadingState.SHOW)
-        bookRepository.getToc(bookId, object : OnResultListener<Toc> {
+        bookRepository.localReadableObj.getToc(bookId, object : OnResultListener<Toc> {
             override fun onSuccess(data: Toc) {
                 data.listItem.sortBy { it.idx }
                 if (data.listItem.first().title.isEmpty()) data.listItem.first().title =
@@ -31,13 +31,22 @@ class ReadBookPresenter internal constructor(
         })
     }
 
+    override fun updateReadingProgress(tocItem: TocItem, readingProgressString: String) {
+        bookRepository.localWritableObj.updateReadingProgress(tocItem.bookId, tocItem.href, readingProgressString,
+            object : OnResultListener<Boolean> {
+                override fun onSuccess(isSuccess: Boolean) {
+                    tocItem.progress = readingProgressString
+                    if (isSuccess) mView?.onUpdateReadingProgressDone(tocItem)
+                }
 
-    override fun onStart() {
-        // TODO implement later
+                override fun onError(e: Exception?) {
+                    //todo leave this fun blank, this error can be ignore silently, it is not too critical
+                }
+            })
     }
 
-    override fun onStop() {
-        // TODO implement later
+    override fun updateLatestReadingTocItem(tocItem: TocItem) {
+        bookRepository.localWritableObj.updateLatestReadingTocItem(tocItem)
     }
 
     override fun setView(view: ReadBookContract.View?) {

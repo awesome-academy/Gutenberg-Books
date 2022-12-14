@@ -12,19 +12,16 @@ import vn.ztech.software.projectgutenberg.utils.base.BaseAdapter
 import vn.ztech.software.projectgutenberg.utils.extension.findCoverImageURL
 import vn.ztech.software.projectgutenberg.utils.extension.findShowableAgent
 
-class ListBookAdapter(private val listener: OnClickListener) :
+class ListBookAdapter(private val listener: (Book) -> Unit) :
     BaseAdapter<ListBookAdapter.BookViewHolder>() {
     private var data = BaseData<Book>()
     private val books
         get() = data.results
 
-    interface OnClickListener {
-        fun onItemClick(book: Book)
-    }
 
     class BookViewHolder(
         private val binding: ItemBookBinding,
-        private val listener: OnClickListener
+        private val listener: (Book) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(book: Book) {
             binding.apply {
@@ -35,7 +32,7 @@ class ListBookAdapter(private val listener: OnClickListener) :
                 book.resources.findCoverImageURL()?.apply {
                     Glide.with(binding.root).load(this).centerCrop().into(ivBookCover)
                 }
-                root.setOnClickListener { listener.onItemClick(book) }
+                root.setOnClickListener { listener(book) }
             }
         }
     }

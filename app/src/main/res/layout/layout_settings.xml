@@ -5,6 +5,8 @@
     android:id="@+id/view_setting"
     android:visibility="gone"
     tools:visibility="visible"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="@dimen/dp_10"
@@ -27,13 +29,12 @@
             android:id="@+id/tvTextSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_15"
-            android:layout_marginBottom="@dimen/view_gaping_large"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
             android:text="@string/text_size"
             android:textColor="?attr/colorPrimaryDark"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bt_divider"
-            app:layout_constraintTop_toTopOf="@id/view_setting_bottom">
+            app:layout_constraintBottom_toTopOf="@id/layout_color_theme_setting">
         </TextView>
 
         <SeekBar
@@ -47,6 +48,15 @@
             app:layout_constraintStart_toEndOf="@id/tvTextSize"
             app:layout_constraintTop_toTopOf="@id/tvTextSize">
         </SeekBar>
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_color_theme_setting"
+            app:layout_constraintBottom_toTopOf="@id/bt_divider"
+            android:layout_marginBottom="@dimen/dp_15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            layout="@layout/layout_setting_theme_color"/>
 
         <View
             android:id="@+id/bt_divider"

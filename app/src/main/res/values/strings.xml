@@ -36,6 +36,8 @@
     <string name="delete_book_local_msg">Do you want to delete %1s from your device permanently?</string>
     <string name="read_book_title">Read this book</string>
     <string name="read_book_msg">It may take a while because this is the first time you read this book!</string>
+    <string name="title_not_supported_file_extension">Not supported file type!</string>
+    <string name="msg_not_supported_file_extension">Sorry :( \nThis %1s file type is not supported by our app yet!</string>
     <string name="preparing_resources">Preparing resources...</string>
     <string name="tv_action_prepare_this_book">Prepare this book to read!</string>
     <string name="bt_title_okey">Okey</string>
@@ -50,4 +52,9 @@
     <string name="text_size">Text size</string>
     <string name="msg_parse_epub_success">Prepare book done! You can read the book now :D</string>
     <string name="msg_parse_epub_failed">Prepare book failed :(. Try again later.</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="vintage">Vintage</string>
+    <string name="bt_read_book_offline">Read book offline!</string>
+    <string name="oops_no_internet_connection">Oops! \n No internet connection :(</string>
 </resources>
