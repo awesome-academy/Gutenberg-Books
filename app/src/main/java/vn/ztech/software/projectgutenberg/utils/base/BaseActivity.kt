@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<T: ViewBinding>(private val inflate: (LayoutInflater) -> T): AppCompatActivity() {
+abstract class BaseActivity<T : ViewBinding>(private val inflate: (LayoutInflater) -> T) :
+    AppCompatActivity() {
 
-    private var binding: T? = null
+    protected var binding: T? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

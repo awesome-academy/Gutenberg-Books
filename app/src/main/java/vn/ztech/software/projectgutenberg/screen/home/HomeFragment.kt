@@ -10,7 +10,9 @@ import vn.ztech.software.projectgutenberg.utils.base.BaseFragment
 import vn.ztech.software.projectgutenberg.utils.extension.toast
 import java.lang.Exception
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate), HomeContract.View {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
+    HomeContract.View {
+
     private lateinit var homePresenter: HomePresenter
 
     override fun initView(view: View) {
