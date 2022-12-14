@@ -1,6 +1,8 @@
 package vn.ztech.software.projectgutenberg.screen.download
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +11,7 @@ import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.databinding.ItemDownloadedBookBinding
 import vn.ztech.software.projectgutenberg.utils.Constant
 import vn.ztech.software.projectgutenberg.utils.base.BaseAdapterLocal
+import vn.ztech.software.projectgutenberg.utils.extension.equalsById
 import vn.ztech.software.projectgutenberg.utils.extension.getLastPart
 import vn.ztech.software.projectgutenberg.utils.extension.loadImage
 import vn.ztech.software.projectgutenberg.utils.extension.removeUnderScore
@@ -35,6 +38,25 @@ class ListBookLocalAdapter(private val listener: OnClickListener) :
                     ivBookCover.loadImage(book.imageUrl)
                 tvSize.text = book.size.toReadableFileSize()
                 tvRecentReadingPercentage.text = book.readingProgress
+
+                if (book.prepared == BookLocal.PREPARED) {
+                    groupReadingProgress.visibility = View.VISIBLE
+                    tvPrepareToRead.visibility = View.GONE
+                    tvRecentReadingPercentage.text = book.readingProgress
+
+                } else {
+                    groupReadingProgress.visibility = View.GONE
+                    tvPrepareToRead.visibility = View.VISIBLE
+                }
+
+                if (book.isProcessing) {
+                    layoutLoading.layoutLoading.visibility = View.VISIBLE
+                    Log.d("LOADINGXXX", book.isProcessing.toString())
+                } else {
+                    layoutLoading.layoutLoading.visibility = View.GONE
+                    Log.d("LOADINGXXX", book.isProcessing.toString())
+                }
+
                 root.setOnClickListener { listener.onItemClick(book) }
                 btDelete.setOnClickListener { listener.onDeleteButtonClicked(book) }
             }
@@ -54,6 +76,14 @@ class ListBookLocalAdapter(private val listener: OnClickListener) :
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+    fun setLoading(book: BookLocal, isLoading: Boolean = true) {
+        val newBook = book.copy(isProcessing = isLoading)
+        addOne(newBook, action = DataAction.REPLACE_ONE) { oldBook, book ->
+            oldBook.equalsById(book)
+        }
+    }
+
 
     private class BookLocalDifferCallback : DiffUtil.ItemCallback<BookLocal>() {
         override fun areItemsTheSame(oldItem: BookLocal, newItem: BookLocal): Boolean {

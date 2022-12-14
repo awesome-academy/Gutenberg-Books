@@ -1,5 +1,6 @@
 package vn.ztech.software.projectgutenberg.data.repository.source.local.database.book
 
+import android.content.ContentValues
 import android.database.Cursor
 import android.provider.BaseColumns
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
@@ -10,10 +11,8 @@ import vn.ztech.software.projectgutenberg.utils.extension.toContentValues
 import vn.ztech.software.projectgutenberg.utils.extension.toImgUrlContentValue
 
 class BookDbDAO private constructor(dbHelper: BookDbHelper) {
-
     private val writableDb by lazy { dbHelper.writableDatabase }
     private val readableDb by lazy { dbHelper.readableDatabase }
-
     val readableDAOObj = object : BookDbDAOReadableInterface {
         override fun getBooks(offset: Int): List<BookLocal> {
             val cursor = readableDb.query(
@@ -56,6 +55,9 @@ class BookDbDAO private constructor(dbHelper: BookDbHelper) {
                 val imgUrlIdx = cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_IMAGE_URL)
                 val imgUrl = cursor.getString(imgUrlIdx)
 
+                val preparedIdx = cursor.getColumnIndex(BookContract.BookEntry.COLUMN_NAME_PREPARED)
+                val prepared = cursor.getInt(preparedIdx)
+
                 books.add(
                     BookLocal(
                         id,
@@ -66,7 +68,8 @@ class BookDbDAO private constructor(dbHelper: BookDbHelper) {
                         dateModified,
                         mimeType,
                         readingProgress = "0",
-                        imgUrl ?: ""
+                        imgUrl ?: "",
+                        prepared = prepared
                     )
                 )
             } while (cursor.moveToNext())
@@ -134,7 +137,6 @@ class BookDbDAO private constructor(dbHelper: BookDbHelper) {
             return books
         }
     }
-
     val writableDAOObj = object : BookDbDAOWritableInterface {
         override fun insertBook(book: BookLocal, duplicateAction: InsertDuplicateAction): Boolean {
             var result = BookDbHelper.SQL_EXECUTION_FAILED
@@ -193,9 +195,6 @@ class BookDbDAO private constructor(dbHelper: BookDbHelper) {
             return true
         }
 
-        override fun removeBook(id: Int): Boolean {
-            TODO("Not yet implemented")
-        }
 
         override fun clearNotExistItems(books: List<BookLocal>): Boolean {
             val listTitles = books.map { it.title }
@@ -271,6 +270,24 @@ class BookDbDAO private constructor(dbHelper: BookDbHelper) {
             return result != BookDbHelper.SQL_EXECUTION_FAILED_INT
         }
 
+        override fun markBookAsPrepared(book: BookLocal): Boolean {
+            val selection = "${BaseColumns._ID} = ?"
+            val selectionArgs = arrayOf(book.id.toString())
+
+            val result = writableDb.update(
+                BookContract.BookEntry.TABLE_NAME,
+                getContentValuesBookPrepared(),
+                selection,
+                selectionArgs
+            )
+            return result >= BookDbHelper.SQL_EXECUTION_MINIMAL_IMPACT_NUMBER
+        }
+
+        private fun getContentValuesBookPrepared(): ContentValues {
+            return ContentValues().apply {
+                put(BookContract.BookEntry.COLUMN_NAME_PREPARED, BookLocal.PREPARED)
+            }
+        }
     }
 
     private fun getDuplicatedCursor(book: BookLocal): Cursor? {
@@ -310,6 +327,7 @@ class BookDbDAO private constructor(dbHelper: BookDbHelper) {
         }
         return conditionBuilder.toString()
     }
+
 
     companion object {
         private var instance: BookDbDAO? = null

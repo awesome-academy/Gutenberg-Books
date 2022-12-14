@@ -31,6 +31,32 @@ abstract class BaseAdapterLocal<M, VH : ViewHolder>(diffCallback: DiffUtil.ItemC
                 offset = set.size
                 submitList(set.toList())
             }
+            else -> {
+                // todo implement later
+            }
+        }
+        submitList(set.toList())
+    }
+
+    fun addOne(item: M, action: DataAction, comparator: ((M, M) -> Boolean)? = null) {
+        val set = mutableSetOf<M>()
+        when (action) {
+            DataAction.REPLACE_ONE -> {
+                comparator?.let {
+                    val indexOfChangedItem = currentList.indexOfFirst { comparator(it, item) }
+                    set.addAll(currentList.subList(0, indexOfChangedItem).toList())
+                    set.add(item)
+                    set.addAll(
+                        currentList.subList(indexOfChangedItem + 1, currentList.size).toList()
+                    )
+                    offset = set.size
+                    submitList(set.toList())
+                }
+
+            }
+            else -> {
+                //todo implement later
+            }
         }
         submitList(set.toList())
     }
@@ -90,6 +116,6 @@ abstract class BaseAdapterLocal<M, VH : ViewHolder>(diffCallback: DiffUtil.ItemC
     }
 
     enum class DataAction {
-        ADD, REPLACE
+        ADD, REPLACE, REPLACE_ONE
     }
 }

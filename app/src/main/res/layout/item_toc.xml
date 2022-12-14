@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/dp_5"
+    android:background="@drawable/bg_selector_item_toc"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:text="Chapter 1: Once upon"
+        android:gravity="center|start"
+        android:paddingStart="@dimen/dp_5"
+        android:maxLines="1"
+        android:textSize="@dimen/sp_14"
+        android:ellipsize="end"
+        android:textColor="?attr/colorOnPrimary"
+        app:layout_constraintEnd_toStartOf="@id/progress_bar_reading"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/progress_bar_reading"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </TextView>
+    <ProgressBar
+        android:id="@+id/progress_bar_reading"
+        tools:progress="75"
+        android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/drawable_reading_progress"
+        android:background="@drawable/bg_reading_progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="@dimen/dp_46"
+        android:layout_height="@dimen/dp_46">
+    </ProgressBar>
+    <ImageView
+        android:id="@+id/ivDoneChecked"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        android:padding="@dimen/dp_10"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:src="@drawable/ic_baseline_check_done_24"
+        app:layout_constraintStart_toStartOf="@id/progress_bar_reading"
+        app:layout_constraintEnd_toEndOf="@id/progress_bar_reading"
+        app:layout_constraintTop_toTopOf="@id/progress_bar_reading"
+        app:layout_constraintBottom_toBottomOf="@id/progress_bar_reading">
+    </ImageView>
+    <TextView
+        android:id="@+id/tvPercent"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        tools:text="100%"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/dp_5"
+        android:textColor="?attr/colorOnPrimary"
+        app:layout_constraintStart_toStartOf="@id/ivDoneChecked"
+        app:layout_constraintEnd_toEndOf="@id/ivDoneChecked"
+        app:layout_constraintTop_toTopOf="@id/ivDoneChecked"
+        app:layout_constraintBottom_toBottomOf="@id/ivDoneChecked"
+        >
+    </TextView>
+</androidx.constraintlayout.widget.ConstraintLayout>

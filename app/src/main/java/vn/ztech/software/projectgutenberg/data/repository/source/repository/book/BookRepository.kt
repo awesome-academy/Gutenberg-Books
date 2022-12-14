@@ -5,12 +5,27 @@ import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.Resource
+import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
+import vn.ztech.software.projectgutenberg.data.model.epub.Toc
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 
 class BookRepository private constructor(
     private val remote: BookDataSource.Remote,
     private val local: BookDataSource.Local
-) : BookDataSource.Remote, BookDataSource.Local {
+) : BookDataSource.Local {
+    val remoteReposObj = object : BookDataSource.Remote {
+        override fun getBooks(page: Int, listener: OnResultListener<BaseAPIResponse<Book>>) {
+            remote.getBooks(page, listener)
+        }
+
+        override fun getBooksWithFilters(
+            page: Int,
+            filters: Map<BookDataSource.Companion.BookFilter, String>,
+            listener: OnResultListener<BaseAPIResponse<Book>>,
+        ) {
+            remote.getBooksWithFilters(page, filters, listener)
+        }
+    }
 
     override fun getBooksLocal(offset: Int, listener: OnResultListener<List<BookLocal>>) {
         local.getBooksLocal(offset, listener)
@@ -39,16 +54,36 @@ class BookRepository private constructor(
         local.searchBookLocal(keyword, listener)
     }
 
-    override fun getBooks(page: Int, listener: OnResultListener<BaseAPIResponse<Book>>) {
-        remote.getBooks(page, listener)
+    override fun unzipBook(
+        context: Context?,
+        book: BookLocal,
+        onResultListener: OnResultListener<String>
+    ) {
+        local.unzipBook(context, book, onResultListener)
     }
 
-    override fun getBooksWithFilters(
-        page: Int,
-        filters: Map<BookDataSource.Companion.BookFilter, String>,
-        listener: OnResultListener<BaseAPIResponse<Book>>,
+    override fun parseEpub(
+        providerUnzippedBookDirectoryPath: String,
+        book: BookLocal,
+        onResultListener: OnResultListener<EpubFile>,
     ) {
-        remote.getBooksWithFilters(page, filters, listener)
+        local.parseEpub(providerUnzippedBookDirectoryPath, book, onResultListener)
+    }
+
+    override fun markBookAsPrepared(book: BookLocal) {
+        local.markBookAsPrepared(book)
+    }
+
+    override fun storeTocToDB(
+        book: BookLocal,
+        epubFile: EpubFile,
+        onResultListener: OnResultListener<EpubFile>
+    ) {
+        local.storeTocToDB(book, epubFile, onResultListener)
+    }
+
+    override fun getToc(bookId: Int, onResultListener: OnResultListener<Toc>) {
+        local.getToc(bookId, onResultListener)
     }
 
     companion object {

@@ -19,6 +19,7 @@ import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.BookContentProviderEntry
 import vn.ztech.software.projectgutenberg.di.getBookLocalDataSource
+import vn.ztech.software.projectgutenberg.utils.Constant
 import vn.ztech.software.projectgutenberg.utils.Constant.DOWNLOAD_UPDATE_PROGRESS_SLEEP_TIME
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -157,10 +158,12 @@ fun Context.getAbsolutePathOfFile(resource: Resource, book: Book): String {
 fun Context.getRelativePathOfFile(resource: Resource, book: Book): String {
     val result = "" +
             "${this.resources.getString(R.string.app_name)}" +
-            "${File.separator}" +
-            "${book.title}" +
+            File.separator +
+            Constant.ZIPPED_EBOOK_FOLDER +
+            File.separator +
+            book.title +
             "${resource.uri.substring(resource.uri.lastIndexOf("/") + 1)}." +
-            "${resource.kindShort}"
+            resource.kindShort
     return result.formatUriPath()
 }
 

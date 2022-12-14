@@ -3,15 +3,24 @@ package vn.ztech.software.projectgutenberg.data.repository.source.local
 import android.content.Context
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.Resource
+import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
+import vn.ztech.software.projectgutenberg.data.model.epub.Toc
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.deleteBook
 import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.fetchBooks
 import vn.ztech.software.projectgutenberg.data.repository.source.local.database.book.BookDbDAO
+import vn.ztech.software.projectgutenberg.data.repository.source.local.database.bookreading.BookReadingDbDAO
 import vn.ztech.software.projectgutenberg.data.repository.source.local.utils.AsynchronousCall
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookDataSource
+import vn.ztech.software.projectgutenberg.utils.extension.getUnzipAbsolutePath
+import vn.ztech.software.projectgutenberg.utils.file.FileUtils
 
 
-class BookLocalDataSource(private val bookDbDAO: BookDbDAO) : BookDataSource.Local {
+class BookLocalDataSource(
+    private val bookDbDAO: BookDbDAO,
+    private val bookReadingDbDAO: BookReadingDbDAO
+) : BookDataSource.Local {
+
 
     override fun getBooksLocal(offset: Int, listener: OnResultListener<List<BookLocal>>) {
         AsynchronousCall<List<BookLocal>>(
@@ -38,8 +47,7 @@ class BookLocalDataSource(private val bookDbDAO: BookDbDAO) : BookDataSource.Loc
     override fun updateBookImageUrl(res: Resource, fileTitle: String, imgUrl: String) {
         AsynchronousCall<Boolean>(
             {
-                val result = bookDbDAO.writableDAOObj.updateImageUrl(res, fileTitle, imgUrl)
-                result
+                bookDbDAO.writableDAOObj.updateImageUrl(res, fileTitle, imgUrl)
             },
             null
         )
@@ -74,12 +82,68 @@ class BookLocalDataSource(private val bookDbDAO: BookDbDAO) : BookDataSource.Loc
         )
     }
 
+    override fun unzipBook(
+        context: Context?,
+        book: BookLocal,
+        onResultListener: OnResultListener<String>
+    ) {
+        context?.let {
+            AsynchronousCall(
+                {
+                    FileUtils.unZip(book.data, getUnzipAbsolutePath(context, book.title))
+                },
+                onResultListener
+            )
+        }
+    }
+
+    override fun parseEpub(
+        providerUnzippedBookDirectoryPath: String,
+        book: BookLocal,
+        onResultListener: OnResultListener<EpubFile>,
+    ) {
+        AsynchronousCall(
+            {
+                val epubFile = EpubFile(providerUnzippedBookDirectoryPath)
+                epubFile.parseEpub()
+                storeTocToDB(book, epubFile, onResultListener)
+                markBookAsPrepared(book)
+                epubFile
+            },
+            onResultListener
+        )
+    }
+
+    override fun storeTocToDB(
+        book: BookLocal,
+        epubFile: EpubFile,
+        onResultListener: OnResultListener<EpubFile>
+    ) {
+        bookReadingDbDAO.writableDAO.storeToc(book, epubFile)
+    }
+
+    override fun getToc(bookId: Int, onResultListener: OnResultListener<Toc>) {
+        AsynchronousCall(
+            {
+                bookReadingDbDAO.readableDAO.getToc(bookId)
+            },
+            onResultListener
+        )
+    }
+
+
+    override fun markBookAsPrepared(book: BookLocal) {
+        bookDbDAO.writableDAOObj.markBookAsPrepared(book)
+    }
+
+
     companion object {
         private var instance: BookLocalDataSource? = null
 
-        fun getInstance(bookDbDAO: BookDbDAO) = synchronized(this) {
-            instance ?: BookLocalDataSource(bookDbDAO).also { instance = it }
-        }
+        fun getInstance(bookDbDAO: BookDbDAO, bookReadingDbDAO: BookReadingDbDAO) =
+            synchronized(this) {
+                instance ?: BookLocalDataSource(bookDbDAO, bookReadingDbDAO).also { instance = it }
+            }
     }
 
 }

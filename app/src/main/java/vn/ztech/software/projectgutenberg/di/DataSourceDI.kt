@@ -11,6 +11,7 @@ fun getBookRemoteDataSource(): BookDataSource.Remote {
 
 fun getBookLocalDataSource(context: Context?): BookDataSource.Local {
     return BookLocalDataSource.getInstance(
-        getBookDBDAO(context)
+        getBookDBDAO(context),
+        getBookReadingDBDAO(context)
     )
 }

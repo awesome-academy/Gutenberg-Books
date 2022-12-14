@@ -5,7 +5,9 @@ import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.repository.source.local.database.book.BookDbDAO.Companion.InsertDuplicateAction
 
 interface BookDbDAOReadableInterface {
+
     fun getBooks(page: Int): List<BookLocal>
+
     fun searchBookLocal(keyWord: String): List<BookLocal>
 }
 
@@ -21,8 +23,6 @@ interface BookDbDAOWritableInterface {
         duplicateAction: InsertDuplicateAction = InsertDuplicateAction.KEEP_ORIGINAL
     ): Boolean
 
-    fun removeBook(id: Int): Boolean
-
     fun clearNotExistItems(books: List<BookLocal>): Boolean
 
     fun deleteBook(title: String): Boolean
@@ -35,4 +35,5 @@ interface BookDbDAOWritableInterface {
 
     fun updateImageUrl(selection: String, selectionArgs: Array<String>, imgUrl: String): Boolean
 
+    fun markBookAsPrepared(book: BookLocal): Boolean
 }

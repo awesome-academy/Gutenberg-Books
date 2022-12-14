@@ -33,6 +33,7 @@ fun BookLocal.toContentValues(): ContentValues {
         )
         put(BookContract.BookEntry.COLUMN_NAME_DATE_MODIFIED, this@toContentValues.dateModified)
         put(BookContract.BookEntry.COLUMN_NAME_DISPLAY_NAME, this@toContentValues.displayName)
+        put(BookContract.BookEntry.COLUMN_NAME_PREPARED, this@toContentValues.prepared)
 
     }
 }

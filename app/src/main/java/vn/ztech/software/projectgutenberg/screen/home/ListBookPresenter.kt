@@ -18,19 +18,21 @@ class ListBookPresenter internal constructor(
         // delete this variable or replace with a proper implementation later
         mView?.updateLoading(loadingArea, Constant.LoadingState.SHOW)
 
-        bookRepository.getBooks(page, object : OnResultListener<BaseAPIResponse<Book>> {
-            override fun onSuccess(data: BaseAPIResponse<Book>) {
-                if (data.next == null || data.next == Constant.STRING_NULL)
-                    isLastPage = true
-                mView?.onGetBooksSuccess(data.toBaseData(), loadingArea)
-                mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
-            }
+        bookRepository.remoteReposObj.getBooks(
+            page,
+            object : OnResultListener<BaseAPIResponse<Book>> {
+                override fun onSuccess(data: BaseAPIResponse<Book>) {
+                    if (data.next == null || data.next == Constant.STRING_NULL)
+                        isLastPage = true
+                    mView?.onGetBooksSuccess(data.toBaseData(), loadingArea)
+                    mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
+                }
 
-            override fun onError(e: Exception?) {
-                mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
-                mView?.onError(e)
-            }
-        })
+                override fun onError(e: Exception?) {
+                    mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
+                    mView?.onError(e)
+                }
+            })
     }
 
     override fun getBooksWithFilters(
@@ -40,7 +42,7 @@ class ListBookPresenter internal constructor(
     ) {
         mView?.updateLoading(loadingArea, Constant.LoadingState.SHOW)
 
-        bookRepository.getBooksWithFilters(
+        bookRepository.remoteReposObj.getBooksWithFilters(
             page,
             filters,
             object : OnResultListener<BaseAPIResponse<Book>> {

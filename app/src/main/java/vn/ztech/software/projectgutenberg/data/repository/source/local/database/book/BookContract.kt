@@ -14,6 +14,7 @@ object BookContract {
         const val COLUMN_NAME_DATE_MODIFIED = "date_modified"
         const val COLUMN_NAME_DISPLAY_NAME = "display_name"
         const val COLUMN_NAME_IMAGE_URL = "img_url"
+        const val COLUMN_NAME_PREPARED = "prepared"
     }
 
     enum class SearchableBookEntry(val value: String) {

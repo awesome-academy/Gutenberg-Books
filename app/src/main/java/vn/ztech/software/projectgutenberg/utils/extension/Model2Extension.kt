@@ -4,6 +4,7 @@ import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.BaseData
 import vn.ztech.software.projectgutenberg.data.model.BaseDataLocal
 import vn.ztech.software.projectgutenberg.data.model.BaseDatabaseResponse
+import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.utils.Constant
 
@@ -57,5 +58,9 @@ fun <T> List<T>.toBaseDataLocal(enableNextPage: Boolean? = null): BaseDataLocal<
         next = if (enableNextPage == null) false else (this.size == Constant.LOCAL_DATA_QUERY_PAGE_SIZE),
         this.toMutableList()
     )
+}
+
+fun BookLocal.equalsById(newBook: BookLocal): Boolean {
+    return this.id == newBook.id
 }
 
