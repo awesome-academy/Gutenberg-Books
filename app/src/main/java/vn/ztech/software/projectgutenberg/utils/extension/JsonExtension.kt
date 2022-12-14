@@ -11,6 +11,9 @@ import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.AgentEntry
 import vn.ztech.software.projectgutenberg.data.model.ResourceEntry
+import vn.ztech.software.projectgutenberg.data.model.Bookshelf
+import vn.ztech.software.projectgutenberg.data.model.BookshelfEntry
+
 
 fun <T> JSONObject.parse(keyEntity: String): T {
     return when (keyEntity) {
@@ -43,6 +46,11 @@ fun <T> JSONObject.parse(keyEntity: String): T {
                 subjects,
                 title
             ) as T
+        }
+        ModelCommon.BOOKSHELF -> {
+            val id: Int = this.getInt(BookshelfEntry.ID)
+            val name: String = this.getString(BookshelfEntry.NAME)
+            Bookshelf(id, name) as T
         }
         ModelCommon.AGENT -> {
             val id: Int = this.getInt(AgentEntry.ID)

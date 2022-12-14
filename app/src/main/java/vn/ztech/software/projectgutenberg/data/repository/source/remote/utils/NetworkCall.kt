@@ -39,9 +39,13 @@ class NetworkCall<T>(
                     data?.let { callBack.onSuccess(it) }
                 }
             } catch (e: JSONException) {
-                callBack.onError(e)
+                mHandler.post {
+                    callBack.onError(e)
+                }
             } catch (e: IOException) {
-                callBack.onError(e)
+                mHandler.post {
+                    callBack.onError(e)
+                }
             }
         }
         mExecutor.shutdown()

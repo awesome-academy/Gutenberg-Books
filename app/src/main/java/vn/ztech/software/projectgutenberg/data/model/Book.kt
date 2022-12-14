@@ -1,5 +1,9 @@
 package vn.ztech.software.projectgutenberg.data.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Book(
     val agents: List<Agent>,
     val bookshelves: List<String>,
@@ -11,8 +15,7 @@ data class Book(
     val resources: List<Resource>,
     val subjects: List<String>,
     val title: String,
-)
-
+) : Parcelable
 
 object BookEntry {
     const val AGENTS = "agents"

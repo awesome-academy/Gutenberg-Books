@@ -10,4 +10,5 @@
     <string name="dialog_title_quit_app">Quit this app?</string>
     <string name="dialog_message_quit_app">By confirming, you will exit the app!</string>
     <string name="exception_parse_json">Wrong json object type</string>
+    <string name="search_bar_placeholder_text_book">Search books...</string>
 </resources>

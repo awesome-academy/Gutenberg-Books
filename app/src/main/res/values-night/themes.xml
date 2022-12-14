@@ -3,10 +3,12 @@
     <style name="Theme.ProjectGutenberg" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/color_beige_normal</item>
+        <item name="colorPrimaryDark">@color/color_beige_light</item>
         <item name="colorPrimaryVariant">@color/color_beige_x_dark</item>
         <item name="colorOnPrimary">@color/color_beige_xx_dark</item>
+        <item name="colorBackgroundFloating">@color/color_beige_dark_transparent</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/color_beige_normal</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
