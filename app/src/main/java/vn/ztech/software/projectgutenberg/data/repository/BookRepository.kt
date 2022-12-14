@@ -1,5 +1,6 @@
 package vn.ztech.software.projectgutenberg.data.repository
 
+import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.repository.source.BookDataSource
 
@@ -12,8 +13,8 @@ class BookRepository private constructor(
         //TODO Implement later
     }
 
-    override fun getBooks(listener: OnResultListener<List<Book>>) {
-        remote.getBooks(listener)
+    override fun getBooks(page: Int, listener: OnResultListener<BaseAPIResponse<Book>>) {
+        remote.getBooks(page, listener)
     }
 
     companion object {

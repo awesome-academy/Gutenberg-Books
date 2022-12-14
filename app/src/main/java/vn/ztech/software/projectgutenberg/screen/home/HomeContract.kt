@@ -2,7 +2,6 @@ package vn.ztech.software.projectgutenberg.screen.home
 
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.utils.base.BasePresenter
-import java.lang.Exception
 
 class HomeContract {
 
