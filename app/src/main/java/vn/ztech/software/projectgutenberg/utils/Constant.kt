@@ -13,7 +13,9 @@ object Constant {
     }
 
     interface LoadingArea {
-        //TODO this interface should be leaved blank
+        enum class Common {
+            NOT_SHOW_LOADING
+        }
     }
 
     enum class LoadingAreaHome : LoadingArea {
@@ -29,6 +31,11 @@ object Constant {
         BookDetailsListWithSameAuthorMore,
         BookDetailsListWithSameBookshelf,
         BookDetailsListWithSameBookshelfMore,
+    }
+
+    enum class LoadingAreaDownloadedBook : LoadingArea {
+        DownloadedBookMain,
+        DownloadedBookLoadMore,
     }
 
     enum class LoadingState {
@@ -65,8 +72,22 @@ object Constant {
     }
 
     const val FIRST_PAGE = 1
+    const val DEFAULT_OFFSET = 0
+    const val EMPTY_STRING = ""
 
     const val DOWNLOAD_UPDATE_PROGRESS_SLEEP_TIME = 100L
     const val URI_FORMAT_REGEX = "[^a-zA-Z0-9.-/]"
     const val URI_FORMAT_REPLACEMENT = "_"
+    const val URI_FORMAT_REPLACEMENT_SPACE = " "
+    const val LOCAL_DATA_QUERY_PAGE_SIZE = 6
+
+    const val CONTENT_PROVIDER_BOOK_STORAGE = "external"
+    const val CONTENT_PROVIDER_BOOK_QUERY_LIKE_COMMAND = " LIKE ? "
+    const val CONTENT_PROVIDER_BOOK_QUERY_EQUAL_COMMAND = " = ? "
+    const val CONTENT_PROVIDER_BOOK_QUERY_LIKE_PATTERN = "%"
+
+    const val SIZE_1KB = 1024
+    const val SIZE_1MB = 1024 * 1024
+    const val SIZE_1KB_STR = "KB"
+    const val SIZE_1MB_STR = "MB"
 }

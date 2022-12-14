@@ -16,6 +16,9 @@ import com.google.android.material.snackbar.Snackbar
 import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Resource
+import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
+import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.BookContentProviderEntry
+import vn.ztech.software.projectgutenberg.di.getBookLocalDataSource
 import vn.ztech.software.projectgutenberg.utils.Constant.DOWNLOAD_UPDATE_PROGRESS_SLEEP_TIME
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -71,7 +74,6 @@ fun Context.download(
     mbook?.let { book ->
         val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadUri = Uri.parse(resource.uri)
-
         val request = DownloadManager.Request(downloadUri).apply {
             setAllowedNetworkTypes(
                 DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
@@ -99,15 +101,12 @@ fun Context.download(
                     getRelativePathOfFile(resource, book)
                 )
         }
-
         val downloadId = downloadManager.enqueue(request)
         val query = DownloadManager.Query().setFilterById(downloadId)
-
         val executor: ExecutorService = Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
 
         executor.execute {
-            /** Sleep between each update in order to make the ui thread more smooth*/
             Thread.sleep(DOWNLOAD_UPDATE_PROGRESS_SLEEP_TIME)
 
             var downloading = true
@@ -119,21 +118,30 @@ fun Context.download(
                 val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     downloading = false
+                    Thread.sleep(BookContentProviderEntry.WAIT_TIME_BEFORE_FETCHING_NEWEST_DATA)
+                    getBookLocalDataSource(this).let { dataSource ->
+                        dataSource.scanLocalStorage(
+                            this@download,
+                            object : OnResultListener<Boolean> {
+                                override fun onSuccess(data: Boolean) {
+                                    dataSource.updateBookImageUrl(
+                                        resource,
+                                        this@download.getFileTitle(resource, book),
+                                        book.resources.findCoverImageURL() ?: ""
+                                    )
+                                }
+
+                                override fun onError(e: Exception?) { /* todo handle this later */
+                                }
+
+                            })
+                    }
                 }
 
                 val reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON))
-                /** Todo to use later
-                val totalSizeBytes =
-                cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                val downloadedSoFarBytes =
-                cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                 */
-                handler.post {
-                    callback(status, reason)
-                }
 
+                handler.post { callback(status, reason) }
             }
-
         }
         executor.shutdown()
     }
@@ -156,8 +164,7 @@ fun Context.getRelativePathOfFile(resource: Resource, book: Book): String {
     return result.formatUriPath()
 }
 
-fun Context.isThisFileExist(path: String): Boolean {
-    val file = File(path)
-    return file.exists()
-}
+
+
+
 

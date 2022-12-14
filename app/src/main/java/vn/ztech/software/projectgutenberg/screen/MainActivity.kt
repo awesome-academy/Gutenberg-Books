@@ -7,22 +7,26 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.navigation.NavigationBarView
 import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.databinding.ActivityMainBinding
+import vn.ztech.software.projectgutenberg.screen.bookshelf.BookshelfFragment
 import vn.ztech.software.projectgutenberg.screen.download.DownloadFragment
 import vn.ztech.software.projectgutenberg.screen.favorite.FavoriteFragment
 import vn.ztech.software.projectgutenberg.screen.home.HomeFragment
-import vn.ztech.software.projectgutenberg.screen.shelf.ShelfFragment
 import vn.ztech.software.projectgutenberg.utils.Constant
+import vn.ztech.software.projectgutenberg.utils.ConstantJava
 import vn.ztech.software.projectgutenberg.utils.base.BaseActivity
 import vn.ztech.software.projectgutenberg.utils.extension.showAlertDialog
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
     NavigationBarView.OnItemSelectedListener {
+
     private val pagerAdapter = PagerAdapter(this)
+
     override fun initView() {
         binding?.bottomNavigationView?.setOnItemSelectedListener(this)
         binding?.pager?.adapter = pagerAdapter
         /** Disable swipe behavior for view pager */
         binding?.pager?.isUserInputEnabled = false
+        binding?.pager?.offscreenPageLimit = ConstantJava.OFF_LIMIT_SCREEN_NUMBER
     }
 
     override fun initData() {
@@ -66,6 +70,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         }
     }
 
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     inner class PagerAdapter(fragmentActivity: FragmentActivity) :
         FragmentStateAdapter(fragmentActivity) {
         override fun getItemCount(): Int {
@@ -75,7 +85,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 Constant.ScreenNumber.Home.ordinal -> HomeFragment.newInstance()
-                Constant.ScreenNumber.Shelf.ordinal -> ShelfFragment.newInstance()
+                Constant.ScreenNumber.Shelf.ordinal -> BookshelfFragment.newInstance()
                 Constant.ScreenNumber.Download.ordinal -> DownloadFragment.newInstance()
                 Constant.ScreenNumber.Favorite.ordinal -> FavoriteFragment.newInstance()
                 else -> HomeFragment.newInstance()
@@ -84,8 +94,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
-    }
+
 }

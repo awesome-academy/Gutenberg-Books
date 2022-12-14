@@ -30,4 +30,10 @@
     <string name="dialog_message_permission">Permission required to download this book</string>
     <string name="dialog_button_allow">Allow</string>
     <string name="dialog_button_deny">Deny</string>
+    <string name="delete_book_local_title">Delete book!</string>
+    <string name="delete_book_local_msg">Do you want to delete %1s from your device permanently?</string>
+    <string name="msg_delete_book_success">Deleted book successfully</string>
+    <string name="title_fetch_data_from_storage">Fetch data from storage!</string>
+    <string name="msg_fetch_data_from_storage">By proceeding this action, you will fetch data from local storage. This may take a while!</string>
+    <string name="msg_scan_book_failed">Scan Books Failed!</string>
 </resources>

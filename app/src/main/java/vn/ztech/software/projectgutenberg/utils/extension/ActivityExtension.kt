@@ -4,33 +4,34 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import vn.ztech.software.projectgutenberg.R
+import kotlin.math.absoluteValue
 
 fun Activity.checkPermissions(vararg permissions: String, handle: () -> Unit) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-        if (isAllPermissionGranted(this, permissions = permissions)) {
-            handle()
-        } else {
-            askPermissions(this, permissions = permissions)
-        }
-    } else {
+    if (isAllPermissionGranted(this, permissions = permissions)) {
         handle()
+    } else {
+        askPermissions(this, permissions = permissions)
     }
 }
 
 private fun askPermissions(activity: Activity, vararg permissions: String) {
+    val listPermissions = mutableListOf<String>()
+
     for (permission in permissions) {
         if (!isPermissionGranted(activity, permission)) {
-            askPermission(activity, permission)
+            listPermissions.add(permission)
         }
     }
+
+    askPermission(activity, listPermissions)
+
 }
 
-private fun askPermission(activity: Activity, permission: String) {
+private fun askPermission(activity: Activity, permissions: MutableList<String>) {
     if (ActivityCompat.shouldShowRequestPermissionRationale(
-            activity, permission
+            activity, permissions[0]
         )
     ) {
         AlertDialog.Builder(activity)
@@ -39,14 +40,18 @@ private fun askPermission(activity: Activity, permission: String) {
             .setPositiveButton(activity.getString(R.string.dialog_button_allow)) { dialog, id ->
                 ActivityCompat.requestPermissions(
                     activity,
-                    arrayOf(permission),
-                    permission.hashCode()
+                    permissions.toTypedArray(),
+                    permissions.hashCode().absoluteValue
                 )
             }
             .setNegativeButton(activity.getString(R.string.dialog_button_allow)) { dialog, id -> dialog.cancel() }
             .show()
     } else {
-        ActivityCompat.requestPermissions(activity, arrayOf(permission), permission.hashCode())
+        ActivityCompat.requestPermissions(
+            activity,
+            permissions.toTypedArray(),
+            permissions.hashCode().absoluteValue
+        )
     }
 }
 

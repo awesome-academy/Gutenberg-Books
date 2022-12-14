@@ -5,13 +5,13 @@ import org.json.JSONException
 import org.json.JSONObject
 import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.Agent
-import vn.ztech.software.projectgutenberg.data.model.ModelCommon
-import vn.ztech.software.projectgutenberg.data.model.BookEntry
-import vn.ztech.software.projectgutenberg.data.model.Resource
+import vn.ztech.software.projectgutenberg.data.model.AgentEntry
 import vn.ztech.software.projectgutenberg.data.model.Book
+import vn.ztech.software.projectgutenberg.data.model.BookEntry
 import vn.ztech.software.projectgutenberg.data.model.Bookshelf
 import vn.ztech.software.projectgutenberg.data.model.BookshelfEntry
-import vn.ztech.software.projectgutenberg.data.model.AgentEntry
+import vn.ztech.software.projectgutenberg.data.model.ModelCommon
+import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.model.ResourceEntry
 
 fun <T> JSONObject.parse(keyEntity: String): T {

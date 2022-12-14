@@ -4,8 +4,6 @@ import vn.ztech.software.projectgutenberg.data.model.Agent
 import vn.ztech.software.projectgutenberg.data.model.AgentEntry
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Resource
-import vn.ztech.software.projectgutenberg.data.model.BaseData
-import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.utils.Constant
 
 /**
@@ -86,39 +84,3 @@ private fun Book.getLanguages(): String? {
     }
 }
 
-fun List<Resource>.getResourcesWithKind(): List<Resource> {
-
-    val resources = mutableListOf<Resource>()
-    this.forEach lit@{ resource ->
-        Constant.ResourceKindClues.values().forEach {
-            if (isNotDefaultType(
-                    resource.type,
-                    resource.uri
-                ) && ((resource.type.contains(it.fullName)))
-            ) {
-                resource.actionType = it.actionType
-                resource.kindShort = it.nameLowerCase
-
-                resources.add(resource)
-                return@lit
-            }
-        }
-    }
-    return resources.sortedBy { it.actionType }
-}
-
-private fun isNotDefaultType(type: String, uri: String): Boolean {
-    Constant.ResourceKindClues.values()
-        .filter { it.actionType == Constant.ActionTypes.DEFAULT }
-        .forEach { if (type.contains(it.fullName) || uri.contains(it.fullName)) return false }
-    return true
-}
-
-fun <T> BaseAPIResponse<T>.toBaseData(): BaseData<T> {
-    val count = this.count
-    val previous = this.previous
-    val next = this.next
-    val result = this.results
-
-    return BaseData(count, next, previous, result.toMutableList())
-}
