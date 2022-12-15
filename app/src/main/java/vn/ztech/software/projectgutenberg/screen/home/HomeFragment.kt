@@ -7,8 +7,6 @@ import vn.ztech.software.projectgutenberg.data.repository.source.local.BookLocal
 import vn.ztech.software.projectgutenberg.data.repository.source.remote.BookRemoteDataSource
 import vn.ztech.software.projectgutenberg.databinding.FragmentHomeBinding
 import vn.ztech.software.projectgutenberg.utils.base.BaseFragment
-import vn.ztech.software.projectgutenberg.utils.extension.toast
-import java.lang.Exception
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     HomeContract.View {
@@ -31,11 +29,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun onGetBooksSuccess(books: List<Book>) {
-        context?.toast(mutableListOf<Book>(Book("War and peace")).toString())
+        binding?.tvTest?.text = books[0].toString()
     }
 
     override fun onError(e: Exception?) {
-        //TODO show error
+        //TODO Implement later
     }
 
     companion object {
