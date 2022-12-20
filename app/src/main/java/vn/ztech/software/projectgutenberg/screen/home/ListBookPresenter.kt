@@ -2,24 +2,30 @@ package vn.ztech.software.projectgutenberg.screen.home
 
 import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.Book
-import vn.ztech.software.projectgutenberg.data.repository.BookRepository
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
+import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
+import vn.ztech.software.projectgutenberg.utils.Constant
 
-class HomePresenter internal constructor(
+class ListBookPresenter internal constructor(
     private val bookRepository: BookRepository
-) : HomeContract.Presenter {
-    private var mView: HomeContract.View? = null
-
-    override fun getBooks() {
+) : ListBookContract.Presenter {
+    private var mView: ListBookContract.View? = null
+    var isLastPage = false
+    override fun getBooks(page: Int, loadingArea: Constant.LoadingArea) {
         // This page variable is for testing
         // delete this variable or replace with a proper implementation later
-        val page = 2
+        mView?.updateLoading(loadingArea, Constant.LoadingState.SHOW)
+
         bookRepository.getBooks(page, object : OnResultListener<BaseAPIResponse<Book>> {
             override fun onSuccess(data: BaseAPIResponse<Book>) {
+                if (data.next == null || data.next == Constant.STRING_NULL)
+                    isLastPage = true
                 mView?.onGetBooksSuccess(data.results)
+                mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
             }
 
             override fun onError(e: Exception?) {
+                mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
                 mView?.onError(e)
             }
         })
@@ -33,8 +39,7 @@ class HomePresenter internal constructor(
         //TODO Implement later
     }
 
-    override fun setView(view: HomeContract.View?) {
+    override fun setView(view: ListBookContract.View?) {
         mView = view
     }
-
 }

@@ -1,28 +1,28 @@
 package vn.ztech.software.projectgutenberg.data.repository.source.remote
 
 import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
-import vn.ztech.software.projectgutenberg.data.model.Book
+import vn.ztech.software.projectgutenberg.data.model.Bookshelf
 import vn.ztech.software.projectgutenberg.data.model.ModelCommon
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 import vn.ztech.software.projectgutenberg.data.repository.source.remote.api.APIQuery
 import vn.ztech.software.projectgutenberg.data.repository.source.remote.utils.NetworkCall
-import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookDataSource
+import vn.ztech.software.projectgutenberg.data.repository.source.repository.bookshelf.BookshelfDataSource
 
-class BookRemoteDataSource : BookDataSource.Remote {
+class BookshelfRemoteDataSource : BookshelfDataSource.Remote {
 
-    override fun getBooks(page: Int, listener: OnResultListener<BaseAPIResponse<Book>>) {
+    override fun getBookshelves(page: Int, listener: OnResultListener<BaseAPIResponse<Bookshelf>>) {
         NetworkCall(
-            urlString = APIQuery.getBookAPI(page),
+            urlString = APIQuery.getBookselfAPI(page),
             listener,
-            ModelCommon.BOOK
+            ModelCommon.BOOKSHELF
         )
     }
 
     companion object {
-        private var instance: BookRemoteDataSource? = null
+        private var instance: BookshelfRemoteDataSource? = null
 
         fun getInstance() = synchronized(this) {
-            instance ?: BookRemoteDataSource().also { instance = it }
+            instance ?: BookshelfRemoteDataSource().also { instance = it }
         }
     }
 }

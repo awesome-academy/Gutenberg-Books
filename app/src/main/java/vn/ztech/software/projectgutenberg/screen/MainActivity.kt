@@ -21,6 +21,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun initView() {
         binding?.bottomNavigationView?.setOnItemSelectedListener(this)
         binding?.pager?.adapter = pagerAdapter
+        /** Disable swipe behavior for view pager */
+        binding?.pager?.isUserInputEnabled = false
     }
 
     override fun initData() {

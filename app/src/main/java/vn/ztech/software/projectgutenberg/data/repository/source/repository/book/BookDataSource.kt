@@ -1,4 +1,4 @@
-package vn.ztech.software.projectgutenberg.data.repository.source
+package vn.ztech.software.projectgutenberg.data.repository.source.repository.book
 
 import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.Book

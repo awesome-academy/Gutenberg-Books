@@ -1,19 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".screen.home.HomeFragment">
-    <TextView
-        android:id="@+id/tv_test"
-        android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/nested"
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:background="?attr/colorOnPrimary"
+            tools:context=".screen.home.HomeFragment">
+
+            <include
+                android:id="@+id/top_app_bar_home"
+                layout="@layout/layout_searchbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <include
+                android:id="@+id/layout_list_recent_reading"
+                layout="@layout/layout_list_recent_reading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/top_app_bar_home" />
+            <include
+                android:id="@+id/layout_list_bookshelves"
+                layout="@layout/layout_list_bookshelves"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/layout_list_books"
+                layout="@layout/layout_list_books"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/view_bottom_loading"
+        layout="@layout/layout_bottom_loading_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FRAGMENT HOME"
+        android:layout_alignBottom="@id/nested"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textSize="@dimen/sp_26"
-        app:layout_constraintTop_toTopOf="parent"/>
-</FrameLayout>
+        app:layout_constraintStart_toStartOf="parent" />
+</RelativeLayout>
+
+
 

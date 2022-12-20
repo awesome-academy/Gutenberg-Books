@@ -2,7 +2,7 @@ package vn.ztech.software.projectgutenberg.data.repository.source.local
 
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
-import vn.ztech.software.projectgutenberg.data.repository.source.BookDataSource
+import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookDataSource
 
 class BookLocalDataSource : BookDataSource.Local {
     override fun getBooksLocal(listener: OnResultListener<List<Book>>) {

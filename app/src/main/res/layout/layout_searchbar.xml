@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_app_bar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="?attr/colorOnPrimary"
+        app:contentInsetStartWithNavigation="@dimen/dp_0"
+        app:titleTextColor="@color/color_beige_xx_dark">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_search"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:focusable="false"
+            app:boxCornerRadiusBottomEnd="@dimen/dp_18"
+            app:boxCornerRadiusBottomStart="@dimen/dp_18"
+            app:boxCornerRadiusTopEnd="@dimen/dp_18"
+            app:boxCornerRadiusTopStart="@dimen/dp_18"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:endIconMode="clear_text"
+            app:endIconTint="?attr/colorPrimary"
+            app:startIconDrawable="@drawable/ic_search_24"
+            app:startIconTint="?attr/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_bar_placeholder_text_book"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingTop="@dimen/dp_6"
+                android:paddingBottom="@dimen/dp_6"
+                android:textColor="?attr/colorPrimary"
+                android:textColorHint="@color/color_beige_dark" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+</com.google.android.material.appbar.AppBarLayout>
