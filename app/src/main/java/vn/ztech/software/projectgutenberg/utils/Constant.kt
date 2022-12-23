@@ -12,11 +12,23 @@ object Constant {
         Favorite
     }
 
-    enum class LoadingArea {
+    interface LoadingArea {
+        //TODO this interface should be leaved blank
+    }
+
+    enum class LoadingAreaHome : LoadingArea {
         HomeRecentReading,
         HomeBookshelf,
         HomeListBook,
         HomeLoadMoreBook,
+
+    }
+
+    enum class LoadingAreaBookDetail : LoadingArea {
+        BookDetailsListWithSameAuthor,
+        BookDetailsListWithSameAuthorMore,
+        BookDetailsListWithSameBookshelf,
+        BookDetailsListWithSameBookshelfMore,
     }
 
     enum class LoadingState {
@@ -33,5 +45,28 @@ object Constant {
     const val IMAGE_STRING = "image"
     const val MAX_IMAGE_SIZE_ORDINAL = 100
     const val PAGE_NUMBER_RANDOM_RANGE = 10
+
+    enum class ResourceKindClues(
+        val nameLowerCase: String,
+        val fullName: String,
+        val actionType: ActionTypes
+    ) {
+        EPUB("epub", "epub+zip", ActionTypes.DOWNLOAD),
+        MOBI("mobi", "mobi", ActionTypes.DOWNLOAD),
+        PLAIN("plain", "plain", ActionTypes.PREVIEW),
+        HTML("html", "html", ActionTypes.PREVIEW),
+        JPEG("jpeg", "jpeg", ActionTypes.DEFAULT),
+        RDF("rdf", "rdf", ActionTypes.DEFAULT),
+        ZIP("zip", ".zip", ActionTypes.DEFAULT),
+    }
+
+    enum class ActionTypes {
+        PREVIEW, DOWNLOAD, DEFAULT
+    }
+
     const val FIRST_PAGE = 1
+
+    const val DOWNLOAD_UPDATE_PROGRESS_SLEEP_TIME = 100L
+    const val URI_FORMAT_REGEX = "[^a-zA-Z0-9.-/]"
+    const val URI_FORMAT_REPLACEMENT = "_"
 }

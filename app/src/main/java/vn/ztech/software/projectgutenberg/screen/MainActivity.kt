@@ -61,7 +61,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             this.showAlertDialog(
                 R.string.dialog_title_quit_app,
                 R.string.dialog_message_quit_app,
-                onClickCancelListener = { _, _ -> /** do nothing */ },
                 onClickOkListener = { _, _ -> finish() }
             )
         }
@@ -83,5 +82,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

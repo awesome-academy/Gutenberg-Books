@@ -10,11 +10,16 @@
     <color name="color_beige_white">#FFFFFFFF</color>
     <color name="color_beige_normal">#FFC4BAA2</color>
     <color name="color_beige_light_transparent">#92C4BAA2</color>
+    <color name="color_beige_light_super_transparent">#66C4BAA2</color>
     <color name="color_beige_light_transparent_x">#3CC4BAA2</color>
     <color name="color_beige_light">#FFFAF5E8</color>
     <color name="color_beige_dark_transparent">#AB7C7461</color>
+    <color name="color_beige_dark_super_transparent">#747C7461</color>
     <color name="color_beige_dark">#FF7C7461</color>
     <color name="color_beige_x_dark">#FF464239</color>
     <color name="color_beige_xx_dark">#FF1A1915</color>
+    <color name="color_link">#0125D8</color>
+    <color name="color_transparent">#00FFFFFF</color>
+    <color name="color_semi_transparent">#74877E69</color>
 </resources>
 

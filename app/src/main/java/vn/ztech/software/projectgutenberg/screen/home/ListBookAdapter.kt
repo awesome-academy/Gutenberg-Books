@@ -4,14 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import vn.ztech.software.projectgutenberg.data.model.BaseData
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.databinding.ItemBookBinding
+import vn.ztech.software.projectgutenberg.utils.Constant
+import vn.ztech.software.projectgutenberg.utils.base.BaseAdapter
 import vn.ztech.software.projectgutenberg.utils.extension.findCoverImageURL
 import vn.ztech.software.projectgutenberg.utils.extension.findShowableAgent
 
 class ListBookAdapter(private val listener: OnClickListener) :
-    RecyclerView.Adapter<ListBookAdapter.BookViewHolder>() {
-    private var books = mutableListOf<Book>()
+    BaseAdapter<ListBookAdapter.BookViewHolder>() {
+    private var data = BaseData<Book>()
+    private val books
+        get() = data.results
 
     interface OnClickListener {
         fun onItemClick(book: Book)
@@ -35,12 +40,25 @@ class ListBookAdapter(private val listener: OnClickListener) :
         }
     }
 
-    fun setData(books: List<Book>, action: AdapterDataAction = AdapterDataAction.ADD) {
+    fun setData(newData: BaseData<Book>, action: AdapterDataAction = AdapterDataAction.ADD) {
         when (action) {
-            AdapterDataAction.ADD -> this.books.addAll(books)
+            AdapterDataAction.ADD -> {
+                data.apply {
+                    count = newData.count
+                    previous = newData.previous
+                    next = newData.next
+                    results.addAll(newData.results)
+                }
+            }
             AdapterDataAction.REPLACE -> {
-                this.books.clear()
-                this.books.addAll(books)
+                data.apply {
+                    count = newData.count
+                    previous = newData.previous
+                    next = newData.next
+                    results.clear()
+                    results.addAll(newData.results)
+                }
+
             }
         }
         notifyDataSetChanged()
@@ -59,7 +77,12 @@ class ListBookAdapter(private val listener: OnClickListener) :
         return books.size
     }
 
+    override fun haveNextPage(): Boolean {
+        return data.next != null && data.next != Constant.STRING_NULL
+    }
+
     enum class AdapterDataAction {
         ADD, REPLACE
     }
+
 }

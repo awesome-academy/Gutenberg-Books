@@ -4,6 +4,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.os.bundleOf
 import vn.ztech.software.projectgutenberg.R
+import vn.ztech.software.projectgutenberg.data.model.BaseData
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Bookshelf
 import vn.ztech.software.projectgutenberg.data.repository.source.local.BookLocalDataSource
@@ -12,7 +13,7 @@ import vn.ztech.software.projectgutenberg.data.repository.source.remote.Bookshel
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.bookshelf.BookshelfRepository
 import vn.ztech.software.projectgutenberg.databinding.FragmentHomeBinding
-import vn.ztech.software.projectgutenberg.screen.bookdetails.BookdetailsFragment
+import vn.ztech.software.projectgutenberg.screen.bookdetails.BookDetailsFragment
 import vn.ztech.software.projectgutenberg.screen.booksearch.BookSearchFragment
 import vn.ztech.software.projectgutenberg.screen.bookshelf.BookshelfFragment
 import vn.ztech.software.projectgutenberg.utils.Constant
@@ -30,7 +31,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private val onScrollChangedListener = object : NestedRecyclerViewPaginator() {
         override fun onHitBottom(page: Int) {
-            listBookPresenter.getBooks(page, Constant.LoadingArea.HomeLoadMoreBook)
+            listBookPresenter.getBooks(page, Constant.LoadingAreaHome.HomeLoadMoreBook)
         }
     }
 
@@ -89,8 +90,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         listBookshelfPresenter.getBookshelves()
     }
 
-    override fun onGetBooksSuccess(books: List<Book>) {
-        listBookAdapter.setData(books)
+    override fun onGetBooksSuccess(data: BaseData<Book>, loadingArea: Constant.LoadingArea) {
+        listBookAdapter.setData(data)
         onScrollChangedListener.onLoadDone()
     }
 
@@ -104,27 +105,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun updateLoading(loadingArea: Constant.LoadingArea, state: Constant.LoadingState) {
         val visibility = if (state == Constant.LoadingState.SHOW) View.VISIBLE else View.GONE
-        when (loadingArea) {
-            Constant.LoadingArea.HomeRecentReading -> {
-                binding?.layoutListRecentReading?.loadingView?.layoutLoading?.visibility =
-                    visibility
-            }
-            Constant.LoadingArea.HomeBookshelf -> {
-                binding?.layoutListBookshelves?.loadingView?.layoutLoading?.visibility = visibility
-            }
-            Constant.LoadingArea.HomeListBook -> {
-                binding?.layoutListBooks?.loadingView?.layoutLoading?.visibility = visibility
-            }
-            Constant.LoadingArea.HomeLoadMoreBook -> {
-                binding?.viewBottomLoading?.bottomLoadingView?.visibility = visibility
+        if (loadingArea is Constant.LoadingAreaHome) {
+            when (loadingArea) {
+                Constant.LoadingAreaHome.HomeRecentReading -> {
+                    binding?.layoutListRecentReading?.loadingView?.layoutLoading?.visibility =
+                        visibility
+                }
+                Constant.LoadingAreaHome.HomeBookshelf -> {
+                    binding?.layoutListBookshelves?.loadingView?.layoutLoading?.visibility =
+                        visibility
+                }
+                Constant.LoadingAreaHome.HomeListBook -> {
+                    binding?.layoutListBooks?.loadingView?.layoutLoading?.visibility = visibility
+                }
+                Constant.LoadingAreaHome.HomeLoadMoreBook -> {
+                    binding?.viewBottomLoading?.bottomLoadingView?.visibility = visibility
+                }
             }
         }
     }
 
     override fun onItemClick(book: Book) {
         openFragment(
-            BookdetailsFragment.newInstance(
-                bundleOf(BookdetailsFragment.BUNDLE_BOOK to book)
+            BookDetailsFragment.newInstance(
+                bundleOf(BookDetailsFragment.BUNDLE_BOOK to book)
             )
         )
     }
