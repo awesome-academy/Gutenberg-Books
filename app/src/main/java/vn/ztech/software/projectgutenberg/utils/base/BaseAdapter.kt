@@ -7,7 +7,9 @@ import vn.ztech.software.projectgutenberg.utils.Constant
 
 abstract class BaseAdapter<VH : ViewHolder> : RecyclerView.Adapter<VH>() {
     var page = Constant.FIRST_PAGE
+    var handle: (Int) -> Unit = {}
     fun loadMore(recyclerView: RecyclerView?, handle: (Int) -> Unit) {
+        this.handle = handle
         recyclerView?.apply {
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
@@ -33,5 +35,10 @@ abstract class BaseAdapter<VH : ViewHolder> : RecyclerView.Adapter<VH>() {
                 && sizeData != -1
     }
 
+    fun forceLoadMore() {
+        handle(++page)
+    }
+
     open fun haveNextPage(): Boolean = false
+
 }

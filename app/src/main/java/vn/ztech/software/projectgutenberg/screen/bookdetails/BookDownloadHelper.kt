@@ -6,11 +6,11 @@ import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.databinding.FragmentBookdetailsBinding
 import vn.ztech.software.projectgutenberg.utils.extension.checkPermissions
+import vn.ztech.software.projectgutenberg.utils.extension.download
+import vn.ztech.software.projectgutenberg.utils.extension.getAbsolutePathOfFile
 import vn.ztech.software.projectgutenberg.utils.extension.isThisFileExist
 import vn.ztech.software.projectgutenberg.utils.extension.showAlertDialog
 import vn.ztech.software.projectgutenberg.utils.extension.showSnackBar
-import vn.ztech.software.projectgutenberg.utils.extension.getAbsolutePathOfFile
-import vn.ztech.software.projectgutenberg.utils.extension.download
 import java.io.IOException
 
 fun handleDownloadBook(

@@ -1,10 +1,21 @@
 package vn.ztech.software.projectgutenberg.utils.extension
 
 import android.app.DownloadManager
+import android.content.ContentValues
+import vn.ztech.software.projectgutenberg.data.repository.source.local.database.book.BookContract
 import vn.ztech.software.projectgutenberg.utils.Constant
+import java.io.File
 
 fun String.formatUriPath(): String {
     return this.replace(Regex(Constant.URI_FORMAT_REGEX), Constant.URI_FORMAT_REPLACEMENT)
+}
+
+fun String.removeUnderScore(): String {
+    return this.replace(Constant.URI_FORMAT_REPLACEMENT, Constant.URI_FORMAT_REPLACEMENT_SPACE)
+}
+
+fun String.getLastPart(): String {
+    return this.substring(this.lastIndexOf(File.separator) + 1)
 }
 
 fun Int.statusToMsg(): String {
@@ -59,3 +70,28 @@ val listReasonShouldShow = listOf(
     DownloadManager.PAUSED_WAITING_FOR_NETWORK,
     DownloadManager.PAUSED_WAITING_TO_RETRY,
 )
+
+fun Long.toReadableFileSize(): String {
+    var result = ""
+    if (Constant.SIZE_1KB <= this && this < Constant.SIZE_1MB) {
+        /** KB */
+        val kb = this.toDouble() / Constant.SIZE_1KB
+        result = kb.roundTo(1).toString() + Constant.SIZE_1KB_STR
+    }
+    if (this >= Constant.SIZE_1MB) {
+        /** KB */
+        val kb = this.toDouble() / Constant.SIZE_1MB
+        result = kb.roundTo(1).toString() + Constant.SIZE_1MB_STR
+    }
+    return result
+}
+
+fun Double.roundTo(n: Int): Double {
+    return "%.${n}f".format(this).toDouble()
+}
+
+fun String.toImgUrlContentValue(): ContentValues {
+    return ContentValues().apply {
+        put(BookContract.BookEntry.COLUMN_NAME_IMAGE_URL, this@toImgUrlContentValue)
+    }
+}

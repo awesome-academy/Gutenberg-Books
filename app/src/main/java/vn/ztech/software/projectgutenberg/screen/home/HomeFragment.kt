@@ -7,12 +7,10 @@ import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.BaseData
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Bookshelf
-import vn.ztech.software.projectgutenberg.data.repository.source.local.BookLocalDataSource
-import vn.ztech.software.projectgutenberg.data.repository.source.remote.BookRemoteDataSource
 import vn.ztech.software.projectgutenberg.data.repository.source.remote.BookshelfRemoteDataSource
-import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.bookshelf.BookshelfRepository
 import vn.ztech.software.projectgutenberg.databinding.FragmentHomeBinding
+import vn.ztech.software.projectgutenberg.di.getListBookPresenter
 import vn.ztech.software.projectgutenberg.screen.bookdetails.BookDetailsFragment
 import vn.ztech.software.projectgutenberg.screen.booksearch.BookSearchFragment
 import vn.ztech.software.projectgutenberg.screen.bookshelf.BookshelfFragment
@@ -72,12 +70,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun initData() {
-        listBookPresenter = ListBookPresenter(
-            BookRepository.getInstance(
-                BookRemoteDataSource.getInstance(),
-                BookLocalDataSource.getInstance()
-            )
-        )
+        activity?.let { listBookPresenter = getListBookPresenter(it.applicationContext) }
         listBookPresenter.setView(this)
         listBookPresenter.getBooks()
 

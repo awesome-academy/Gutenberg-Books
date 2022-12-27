@@ -3,21 +3,25 @@ package vn.ztech.software.projectgutenberg.screen.bookdetails
 import android.app.DownloadManager
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import com.bumptech.glide.manager.SupportRequestManagerFragment
 import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.Agent
 import vn.ztech.software.projectgutenberg.data.model.BaseData
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.Resource
-import vn.ztech.software.projectgutenberg.data.repository.source.local.BookLocalDataSource
-import vn.ztech.software.projectgutenberg.data.repository.source.remote.BookRemoteDataSource
 import vn.ztech.software.projectgutenberg.data.repository.source.remote.api.APIQuery
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookDataSource
-import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
 import vn.ztech.software.projectgutenberg.databinding.FragmentBookdetailsBinding
+import vn.ztech.software.projectgutenberg.di.getListBookPresenter
+import vn.ztech.software.projectgutenberg.screen.MainActivity
+import vn.ztech.software.projectgutenberg.screen.bookshelf.BookshelfFragment
 import vn.ztech.software.projectgutenberg.screen.download.DownloadFragment
+import vn.ztech.software.projectgutenberg.screen.favorite.FavoriteFragment
+import vn.ztech.software.projectgutenberg.screen.home.HomeFragment
 import vn.ztech.software.projectgutenberg.screen.home.ListBookAdapter
 import vn.ztech.software.projectgutenberg.screen.home.ListBookContract
 import vn.ztech.software.projectgutenberg.screen.home.ListBookPresenter
@@ -27,31 +31,23 @@ import vn.ztech.software.projectgutenberg.utils.base.BaseFragment
 import vn.ztech.software.projectgutenberg.utils.extension.findCoverImageURL
 import vn.ztech.software.projectgutenberg.utils.extension.findShowableAgent
 import vn.ztech.software.projectgutenberg.utils.extension.getAvailableMetadata
-import vn.ztech.software.projectgutenberg.utils.extension.loadImage
 import vn.ztech.software.projectgutenberg.utils.extension.getResourcesWithKind
-import vn.ztech.software.projectgutenberg.utils.extension.toast
-import vn.ztech.software.projectgutenberg.utils.extension.showAlertDialog
 import vn.ztech.software.projectgutenberg.utils.extension.listStatusShouldShow
+import vn.ztech.software.projectgutenberg.utils.extension.loadImage
+import vn.ztech.software.projectgutenberg.utils.extension.reasonToMsg
+import vn.ztech.software.projectgutenberg.utils.extension.showAlertDialog
 import vn.ztech.software.projectgutenberg.utils.extension.showSnackBar
 import vn.ztech.software.projectgutenberg.utils.extension.statusToMsg
-import vn.ztech.software.projectgutenberg.utils.extension.reasonToMsg
-
+import vn.ztech.software.projectgutenberg.utils.extension.toast
 
 
 class BookDetailsFragment
     : BaseFragment<FragmentBookdetailsBinding>(FragmentBookdetailsBinding::inflate),
     ListResourceAdapter.OnClickListener, ListBookContract.View, ListBookAdapter.OnClickListener {
 
-    private val listBookPresenter
-        by lazy { ListBookPresenter(
-                        BookRepository.getInstance(
-                            BookRemoteDataSource.getInstance(),
-                            BookLocalDataSource.getInstance()
-                        )
-                    )
-                }
-    private val listBookAdapterSameAuthor: ListBookAdapter = ListBookAdapter(this)
-    private val listBookAdapterSameBookshelf: ListBookAdapter = ListBookAdapter(this)
+    private lateinit var listBookPresenter: ListBookPresenter
+    private var listBookAdapterSameAuthor: ListBookAdapter = ListBookAdapter(this)
+    private var listBookAdapterSameBookshelf: ListBookAdapter = ListBookAdapter(this)
     private val listResourceAdapter = ListResourceAdapter(this)
     private var book: Book? = null
     private var showableAgent: Agent? = null
@@ -126,6 +122,7 @@ class BookDetailsFragment
     }
 
     override fun initData() {
+        activity?.let { listBookPresenter = getListBookPresenter(it.applicationContext) }
         listBookPresenter.setView(this)
 
         book?.let {
@@ -269,7 +266,10 @@ class BookDetailsFragment
                             status.statusToMsg() + if (reason != 0) "\nReason: ${reason.reasonToMsg()}" else "",
                             resources.getString(R.string.view)
                         ) {
-                            openFragment(fragment = DownloadFragment.newInstance())
+                            /**Move to download fragment*/
+                            clearFragments()
+                            (activity as MainActivity?)?.binding?.bottomNavigationView?.selectedItemId =
+                                R.id.menu_download
                         }
                     }
                     else -> {
@@ -283,6 +283,20 @@ class BookDetailsFragment
 
             }
         }
+    }
+
+    private fun clearFragments() {
+        activity?.supportFragmentManager?.fragments?.let {
+            Log.d("FRAGMENTXXXxxxx", fragmentsShouldNotClear.toString())
+
+            for (fragment in it) {
+                Log.d("FRAGMENTXXX", fragment::class.java.toString())
+                if (!(fragment::class.java in fragmentsShouldNotClear)) {
+                    activity?.supportFragmentManager?.beginTransaction()?.remove(fragment)?.commit()
+                }
+            }
+        }
+
     }
 
     override fun onItemClick(book: Book) {
@@ -301,5 +315,12 @@ class BookDetailsFragment
 
         const val BUNDLE_BOOK = "BUNDLE_BOOK"
         const val BUNDLE_BOOK_PREVIEW_URL = "BUNDLE_BOOK_PREVIEW_URL"
+        val fragmentsShouldNotClear = listOf<Class<*>>(
+            HomeFragment::class.java,
+            BookshelfFragment::class.java,
+            DownloadFragment::class.java,
+            FavoriteFragment::class.java,
+            SupportRequestManagerFragment::class.java
+        )
     }
 }
