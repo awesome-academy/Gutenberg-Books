@@ -8,6 +8,7 @@
     android:background="@drawable/bg_layout_loading"
     android:clickable="true"
     android:focusable="true"
+    android:elevation="@dimen/dp_8"
     tools:visibility="visible"
     android:visibility="gone">
 

@@ -5,12 +5,14 @@ import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.Book
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.Resource
+import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
+import vn.ztech.software.projectgutenberg.data.model.epub.Toc
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 
 interface BookDataSource {
 
     interface Local {
-        
+
         fun getBooksLocal(offset: Int, listener: OnResultListener<List<BookLocal>>)
 
         fun scanLocalStorage(
@@ -33,6 +35,28 @@ interface BookDataSource {
         )
 
         fun searchBookLocal(keyword: String, listener: OnResultListener<List<BookLocal>>)
+
+        fun unzipBook(
+            context: Context?,
+            book: BookLocal,
+            onResultListener: OnResultListener<String>
+        )
+
+        fun parseEpub(
+            providerUnzippedBookDirectoryPath: String,
+            book: BookLocal, onResultListener: OnResultListener<EpubFile>
+        )
+
+        fun markBookAsPrepared(book: BookLocal)
+
+        fun storeTocToDB(
+            book: BookLocal,
+            epubFile: EpubFile,
+            onResultListener: OnResultListener<EpubFile>
+        )
+
+        fun getToc(bookId: Int, onResultListener: OnResultListener<Toc>)
+
     }
 
     interface Remote {

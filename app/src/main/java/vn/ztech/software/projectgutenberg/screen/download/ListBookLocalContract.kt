@@ -19,20 +19,18 @@ interface ListBookLocalContract {
         )
 
         fun onScanBookComplete(data: Boolean, loadingArea: Constant.LoadingArea)
-
         fun onError(e: Exception?)
-
         fun onHitLastPage(page: Int)
-
         fun onDeleteBookComplete(data: Boolean)
-
         fun setLoadMore(enable: Boolean)
+        fun onUnzipBookSuccess(book: BookLocal)
+        fun onUnzipBookFailed(book: BookLocal)
+        fun onParseEpubDone(book: BookLocal, success: BasePresenter.Companion.Result)
     }
 
     interface Presenter : BasePresenter<View> {
-
         fun getDownloadedBooks(
-            offset: Int = Constant.DEFAULT_OFFSET,
+            offset: Int = 0,
             loadingArea: Constant.LoadingArea = Constant.LoadingAreaDownloadedBook.DownloadedBookMain,
             action: GetBooksActionType = GetBooksActionType.LOAD
         )
@@ -52,5 +50,7 @@ interface ListBookLocalContract {
         )
 
         fun refresh()
+        fun unzipBook(context: Context?, book: BookLocal)
+        fun parseEpubFile(book: BookLocal, providerUnzippedBookDirectoryPath: String)
     }
 }

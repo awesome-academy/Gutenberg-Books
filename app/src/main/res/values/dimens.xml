@@ -14,6 +14,13 @@
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_0">0dp</dimen>
 
+    <dimen name="control_area_elevation">10dp</dimen>
+    <dimen name="view_gaping_medium">15dp</dimen>
+    <dimen name="view_gaping_large">25dp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">19sp</dimen>
+    <dimen name="conor_radius_large">15dp</dimen>
+
     // sp
     <dimen name="sp_26">26sp</dimen>
     <dimen name="sp_12">12sp</dimen>
@@ -28,4 +35,5 @@
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_260">260dp</dimen>
+    <dimen name="dp_46">46dp</dimen>
 </resources>

@@ -2,11 +2,13 @@ package vn.ztech.software.projectgutenberg.screen.download
 
 import android.content.Context
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
+import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
 import vn.ztech.software.projectgutenberg.screen.download.DownloadFragment.Companion.GetBooksActionType
 import vn.ztech.software.projectgutenberg.utils.Constant
 import vn.ztech.software.projectgutenberg.utils.Constant.EMPTY_STRING
+import vn.ztech.software.projectgutenberg.utils.base.BasePresenter.Companion.Result
 import vn.ztech.software.projectgutenberg.utils.extension.toBaseDataLocal
 
 class ListBookLocalPresenter internal constructor(
@@ -24,7 +26,8 @@ class ListBookLocalPresenter internal constructor(
     ) {
         currentAction = DownloadFragment.Companion.ActionType.LOAD
         val loading =
-            if (action == GetBooksActionType.SILENT_REFRESH) Constant.LoadingState.HIDE else Constant.LoadingState.SHOW
+            if (action == GetBooksActionType.SILENT_REFRESH) Constant.LoadingState.HIDE
+            else Constant.LoadingState.SHOW
         mView?.updateLoading(loadingArea, loading)
 
         bookRepository.getBooksLocal(offset, object : OnResultListener<List<BookLocal>> {
@@ -108,7 +111,8 @@ class ListBookLocalPresenter internal constructor(
         currentKeyword = keyword
         mView?.setLoadMore(false)
         val loading =
-            if (action == GetBooksActionType.SILENT_REFRESH) Constant.LoadingState.HIDE else Constant.LoadingState.SHOW
+            if (action == GetBooksActionType.SILENT_REFRESH) Constant.LoadingState.HIDE
+            else Constant.LoadingState.SHOW
         mView?.updateLoading(loadingArea, loading)
 
         bookRepository.searchBookLocal(keyword, object : OnResultListener<List<BookLocal>> {
@@ -130,9 +134,43 @@ class ListBookLocalPresenter internal constructor(
 
     override fun refresh() {
         when (currentAction) {
-            DownloadFragment.Companion.ActionType.LOAD -> getDownloadedBooks(action = GetBooksActionType.SILENT_REFRESH)
+            DownloadFragment.Companion.ActionType.LOAD ->
+                getDownloadedBooks(action = GetBooksActionType.SILENT_REFRESH)
             DownloadFragment.Companion.ActionType.SEARCH -> searchBooksLocal(currentKeyword)
         }
+    }
+
+    override fun unzipBook(context: Context?, book: BookLocal) {
+        bookRepository.unzipBook(context, book, object : OnResultListener<String> {
+            override fun onSuccess(data: String) {
+                mView?.onUnzipBookSuccess(book)
+            }
+
+            override fun onError(e: Exception?) {
+                mView?.onUnzipBookSuccess(book)
+                mView?.onError(e)
+            }
+
+        })
+    }
+
+    override fun parseEpubFile(book: BookLocal, providerUnzippedBookDirectoryPath: String) {
+        bookRepository.parseEpub(
+            providerUnzippedBookDirectoryPath,
+            book,
+            object : OnResultListener<EpubFile> {
+                override fun onSuccess(data: EpubFile) {
+                    book.epubFile = data
+                    mView?.onParseEpubDone(book.copy(prepared = 1), Result.SUCCESS)
+                    /**Mark this book as prepared so that the UI can update*/
+                }
+
+                override fun onError(e: Exception?) {
+                    mView?.onParseEpubDone(book, Result.FAILED)
+                    mView?.onError(e)
+                }
+
+            })
     }
 
     override fun onStart() {

@@ -7,7 +7,9 @@ import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.repository.source.local.database.BookDbHelper
 import vn.ztech.software.projectgutenberg.utils.Constant
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.InputStream
 
 /** Currently, the path will only point to public Documents dir
  * , in further version, custom path might be supported*/
@@ -18,9 +20,9 @@ fun fetchBooks(context: Context): List<BookLocal> {
     val contentUri = MediaStore.Files.getContentUri(Constant.CONTENT_PROVIDER_BOOK_STORAGE)
     val selection = MediaStore.MediaColumns.DATA + Constant.CONTENT_PROVIDER_BOOK_QUERY_LIKE_COMMAND
     val conditionData =
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).path +
+        getProviderBasePath(context) +
                 File.separator +
-                context.resources.getString(R.string.app_name) +
+                Constant.ZIPPED_EBOOK_FOLDER +
                 File.separator +
                 Constant.CONTENT_PROVIDER_BOOK_QUERY_LIKE_PATTERN
     val conditions = arrayOf(conditionData)
@@ -75,6 +77,28 @@ fun deleteBook(context: Context, book: BookLocal): Boolean {
         contentUri, selection, conditions
     )
     return numDeleted == BookDbHelper.SQL_EXECUTION_DELETE_ONE_SUCCESS
+}
+
+fun getProviderBasePath(context: Context): String {
+    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).path +
+            File.separator +
+            context.resources.getString(R.string.app_name)
+}
+
+fun getProviderUnzippedBooksBaseDirectoryPath(context: Context): String {
+    return getProviderBasePath(context) +
+            File.separator +
+            Constant.UNZIPPED_FOLDER_NAME
+}
+
+fun getProviderUnzippedBookDirectoryPath(context: Context, title: String): String {
+    return getProviderUnzippedBooksBaseDirectoryPath(context) +
+            File.separator +
+            title
+}
+
+fun getInputStreamFromExternalStorage(srcPath: String): InputStream? {
+    return BufferedInputStream(File(srcPath).inputStream())
 }
 
 object BookContentProviderEntry {

@@ -9,19 +9,19 @@ import android.os.Environment
 import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.core.os.bundleOf
 import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.BaseDataLocal
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
-import vn.ztech.software.projectgutenberg.data.repository.source.local.BookLocalDataSource
-import vn.ztech.software.projectgutenberg.data.repository.source.local.database.BookDbHelper
-import vn.ztech.software.projectgutenberg.data.repository.source.local.database.book.BookDbDAO
-import vn.ztech.software.projectgutenberg.data.repository.source.remote.BookRemoteDataSource
-import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
+import vn.ztech.software.projectgutenberg.data.repository.source.local.contentprovider.getProviderUnzippedBookDirectoryPath
 import vn.ztech.software.projectgutenberg.databinding.FragmentDownloadBinding
+import vn.ztech.software.projectgutenberg.di.getListLocalBookPresenter
+import vn.ztech.software.projectgutenberg.screen.readbook.ReadBookActivity
 import vn.ztech.software.projectgutenberg.utils.Constant
 import vn.ztech.software.projectgutenberg.utils.Constant.LoadingAreaDownloadedBook
 import vn.ztech.software.projectgutenberg.utils.base.BaseAdapterLocal
 import vn.ztech.software.projectgutenberg.utils.base.BaseFragment
+import vn.ztech.software.projectgutenberg.utils.base.BasePresenter.Companion.Result
 import vn.ztech.software.projectgutenberg.utils.extension.checkPermissions
 import vn.ztech.software.projectgutenberg.utils.extension.removeUnderScore
 import vn.ztech.software.projectgutenberg.utils.extension.showAlertDialog
@@ -54,7 +54,8 @@ class DownloadFragment
             if (data) {
                 listBookLocalPresenter.getDownloadedBooks(action = GetBooksActionType.REFRESH)
             } else {
-                context?.toast(getString(R.string.msg_scan_book_failed))
+                val msg = context?.getString(R.string.msg_scan_book_failed)
+                msg?.let { context?.toast(it) }
             }
         }
 
@@ -67,21 +68,39 @@ class DownloadFragment
         }
 
         override fun onDeleteBookComplete(data: Boolean) {
-            var msg = ""
-            when (data) {
-                true -> {
-                    msg = getString(R.string.msg_delete_book_success)
-                }
-                false -> {
-                    msg = getString(R.string.msg_delete_book_success)
-                }
-            }
-            context?.toast(msg)
+            val msg = context?.getString(
+                if (data) R.string.msg_delete_book_success
+                else R.string.msg_delete_book_failed
+            )
+            msg?.let { context?.toast(msg) }
             listBookLocalPresenter.refresh()
         }
 
         override fun setLoadMore(enable: Boolean) {
             listBookLocalAdapter.setLoadMore(enable)
+        }
+
+        override fun onUnzipBookSuccess(book: BookLocal) {
+//            listBookLocalAdapter.setLoading(book, isLoading = false)
+            context?.let {
+                listBookLocalPresenter.parseEpubFile(
+                    book,
+                    getProviderUnzippedBookDirectoryPath(it, book.title)
+                )
+            }
+        }
+
+        override fun onUnzipBookFailed(book: BookLocal) {
+            listBookLocalAdapter.setLoading(book, isLoading = false)
+        }
+
+        override fun onParseEpubDone(book: BookLocal, result: Result) {
+            val msg = context?.getString(
+                if (result == Result.SUCCESS) R.string.msg_parse_epub_success
+                else R.string.msg_parse_epub_failed
+            )
+            msg?.let { context?.toast(it) }
+            listBookLocalAdapter.setLoading(book, isLoading = false)
         }
 
         override fun updateLoading(
@@ -105,23 +124,13 @@ class DownloadFragment
         }
 
     }
-    private val listBookLocalPresenter
-            by lazy {
-                ListBookLocalPresenter(
-                    BookRepository.getInstance(
-                        BookRemoteDataSource.getInstance(),
-                        BookLocalDataSource.getInstance(
-                            BookDbDAO.getInstance(
-                                BookDbHelper.getInstance(context)
-                            )
-                        )
-                    )
-                )
-            }
+    lateinit var listBookLocalPresenter: ListBookLocalPresenter
     private var isFetchingFromStorage = false
     private val listBookLocalAdapter by lazy { ListBookLocalAdapter(this) }
-
     override fun initView(view: View) {
+        activity?.let {
+            listBookLocalPresenter = getListLocalBookPresenter(it.applicationContext)
+        }
         binding?.apply {
             swipeRefreshLayout.setOnRefreshListener {
                 context?.showAlertDialog(
@@ -202,7 +211,24 @@ class DownloadFragment
     }
 
     override fun onItemClick(book: BookLocal) {
-        //TODO implement later
+        if (book.prepared == BookLocal.PREPARED) {
+            val intent = Intent(activity, ReadBookActivity::class.java)
+            intent.putExtras(bundleOf(ReadBookActivity.BUNDLE_BOOK_LOCAL to book))
+            startActivity(intent)
+        } else {
+            context?.let {
+                it.showAlertDialog(
+                    resources.getString(R.string.read_book_title),
+                    resources.getString(R.string.read_book_msg),
+                    onClickOkListener = { _, _ ->
+                        listBookLocalAdapter.setLoading(book)
+                        listBookLocalPresenter.unzipBook(context, book)
+                    },
+                    onClickCancelListener = { _, _ -> }
+                )
+            }
+        }
+
     }
 
     override fun onDeleteButtonClicked(book: BookLocal) {

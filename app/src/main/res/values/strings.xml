@@ -9,6 +9,8 @@
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_title_quit_app">Quit this app?</string>
     <string name="dialog_message_quit_app">By confirming, you will exit the app!</string>
+    <string name="dialog_title_exit_reading">Exit reading?</string>
+    <string name="dialog_message_exit_reading">By confirming, you will exit reading this book!</string>
     <string name="exception_parse_json">Wrong json object type</string>
     <string name="search_bar_placeholder_text_book">Search books...</string>
     <string name="format_author">By %1s</string>
@@ -32,8 +34,20 @@
     <string name="dialog_button_deny">Deny</string>
     <string name="delete_book_local_title">Delete book!</string>
     <string name="delete_book_local_msg">Do you want to delete %1s from your device permanently?</string>
+    <string name="read_book_title">Read this book</string>
+    <string name="read_book_msg">It may take a while because this is the first time you read this book!</string>
+    <string name="preparing_resources">Preparing resources...</string>
+    <string name="tv_action_prepare_this_book">Prepare this book to read!</string>
+    <string name="bt_title_okey">Okey</string>
+    <string name="bt_title_cancel">Cancel</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="msg_delete_book_success">Deleted book successfully</string>
+    <string name="msg_delete_book_failed">Deleted book failed</string>
     <string name="title_fetch_data_from_storage">Fetch data from storage!</string>
     <string name="msg_fetch_data_from_storage">By proceeding this action, you will fetch data from local storage. This may take a while!</string>
     <string name="msg_scan_book_failed">Scan Books Failed!</string>
+    <string name="text_size">Text size</string>
+    <string name="msg_parse_epub_success">Prepare book done! You can read the book now :D</string>
+    <string name="msg_parse_epub_failed">Prepare book failed :(. Try again later.</string>
 </resources>

@@ -23,6 +23,11 @@
         android:theme="@style/Theme.ProjectGutenberg"
         tools:targetApi="31">
         <activity
+            android:name=".screen.readbook.ReadBookActivity"
+            android:screenOrientation="portrait"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".screen.splash.SplashActivity"
             android:configChanges="orientation"
             android:exported="true"
@@ -38,7 +43,6 @@
             android:name=".screen.MainActivity"
             android:configChanges="orientation"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
     </application>
-
 </manifest>

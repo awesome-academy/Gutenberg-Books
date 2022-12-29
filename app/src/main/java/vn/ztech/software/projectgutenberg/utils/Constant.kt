@@ -38,6 +38,10 @@ object Constant {
         DownloadedBookLoadMore,
     }
 
+    enum class LoadingAreaReadBook : LoadingArea {
+        ReadBookMain,
+    }
+
     enum class LoadingState {
         SHOW,
         HIDE
@@ -90,4 +94,8 @@ object Constant {
     const val SIZE_1MB = 1024 * 1024
     const val SIZE_1KB_STR = "KB"
     const val SIZE_1MB_STR = "MB"
+
+    const val UNZIPPED_FOLDER_NAME = "Unzipped"
+    const val ZIPPED_EBOOK_FOLDER = "Ebook"
+    const val UTF_8 = "UTF-8"
 }
