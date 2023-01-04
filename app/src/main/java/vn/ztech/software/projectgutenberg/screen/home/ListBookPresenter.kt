@@ -2,6 +2,7 @@ package vn.ztech.software.projectgutenberg.screen.home
 
 import vn.ztech.software.projectgutenberg.data.model.BaseAPIResponse
 import vn.ztech.software.projectgutenberg.data.model.Book
+import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.repository.OnResultListener
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookDataSource
 import vn.ztech.software.projectgutenberg.data.repository.source.repository.book.BookRepository
@@ -60,13 +61,24 @@ class ListBookPresenter internal constructor(
             })
     }
 
+    override fun getAllRecentReadingBook(
+        loadingArea: Constant.LoadingArea,
+        state: Constant.LoadingState
+    ) {
+        mView?.updateLoading(loadingArea, state)
 
-    override fun onStart() {
-        //TODO Implement later
-    }
+        bookRepository.localReadableObj.getAllRecentReadingBook(
+            object : OnResultListener<List<BookLocal>> {
+                override fun onSuccess(data: List<BookLocal>) {
+                    mView?.onGetRecentReadingBookSuccess(data, loadingArea)
+                    mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
+                }
 
-    override fun onStop() {
-        //TODO Implement later
+                override fun onError(e: Exception?) {
+                    mView?.updateLoading(loadingArea, Constant.LoadingState.HIDE)
+                    mView?.onError(e)
+                }
+            })
     }
 
     override fun setView(view: ListBookContract.View?) {

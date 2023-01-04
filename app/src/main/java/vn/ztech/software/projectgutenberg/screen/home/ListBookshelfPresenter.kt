@@ -38,14 +38,6 @@ class ListBookshelfPresenter internal constructor(
             })
     }
 
-    override fun onStart() {
-        //TODO Implement later
-    }
-
-    override fun onStop() {
-        //TODO Implement later
-    }
-
     override fun setView(view: ListBookshelfContract.View?) {
         mView = view
     }

@@ -30,7 +30,7 @@ class ListBookLocalPresenter internal constructor(
             else Constant.LoadingState.SHOW
         mView?.updateLoading(loadingArea, loading)
 
-        bookRepository.getBooksLocal(offset, object : OnResultListener<List<BookLocal>> {
+        bookRepository.localReadableObj.getBooksLocal(offset, object : OnResultListener<List<BookLocal>> {
             override fun onSuccess(data: List<BookLocal>) {
                 if (data.isEmpty() || data.size < Constant.LOCAL_DATA_QUERY_PAGE_SIZE) mView?.onHitLastPage(
                     offset
@@ -54,7 +54,7 @@ class ListBookLocalPresenter internal constructor(
     override fun scanLocalStorage(context: Context, loadingArea: Constant.LoadingArea) {
         mView?.updateLoading(loadingArea, Constant.LoadingState.SHOW)
 
-        bookRepository.scanLocalStorage(
+        bookRepository.localReadableObj.scanLocalStorage(
             context,
             object : OnResultListener<Boolean> {
                 override fun onSuccess(data: Boolean) {
@@ -77,7 +77,7 @@ class ListBookLocalPresenter internal constructor(
     ) {
         mView?.updateLoading(loadingArea, Constant.LoadingState.SHOW)
 
-        bookRepository.deleteBookLocal(
+        bookRepository.localWritableObj.deleteBookLocal(
             context = context,
             book,
             object : OnResultListener<Boolean> {
@@ -115,7 +115,7 @@ class ListBookLocalPresenter internal constructor(
             else Constant.LoadingState.SHOW
         mView?.updateLoading(loadingArea, loading)
 
-        bookRepository.searchBookLocal(keyword, object : OnResultListener<List<BookLocal>> {
+        bookRepository.localReadableObj.searchBookLocal(keyword, object : OnResultListener<List<BookLocal>> {
             override fun onSuccess(data: List<BookLocal>) {
                 mView?.onGetBooksSuccess(
                     data.toBaseDataLocal(enableNextPage = true),
@@ -141,7 +141,7 @@ class ListBookLocalPresenter internal constructor(
     }
 
     override fun unzipBook(context: Context?, book: BookLocal) {
-        bookRepository.unzipBook(context, book, object : OnResultListener<String> {
+        bookRepository.localWritableObj.unzipBook(context, book, object : OnResultListener<String> {
             override fun onSuccess(data: String) {
                 mView?.onUnzipBookSuccess(book)
             }
@@ -155,7 +155,7 @@ class ListBookLocalPresenter internal constructor(
     }
 
     override fun parseEpubFile(book: BookLocal, providerUnzippedBookDirectoryPath: String) {
-        bookRepository.parseEpub(
+        bookRepository.localReadableObj.parseEpub(
             providerUnzippedBookDirectoryPath,
             book,
             object : OnResultListener<EpubFile> {
@@ -173,12 +173,22 @@ class ListBookLocalPresenter internal constructor(
             })
     }
 
-    override fun onStart() {
-        // TODO implement later
-    }
+    override fun updateNewDataAndLoadMore(offset: Int) {
+        bookRepository.localReadableObj.getBookWithLimit(
+            offset + Constant.LOCAL_DATA_QUERY_PAGE_SIZE,
+            object : OnResultListener<List<BookLocal>> {
+                override fun onSuccess(data: List<BookLocal>) {
+                    mView?.onGetBooksSuccess(
+                        data.toBaseDataLocal(enableNextPage = true),
+                        loadingArea = Constant.LoadingArea.Common.NOT_SHOW_LOADING,
+                        action = GetBooksActionType.SILENT_REFRESH
+                    )
+                }
 
-    override fun onStop() {
-        // TODO implement later
+                override fun onError(e: Exception?) {
+                    mView?.onError(e)
+                }
+            })
     }
 
     override fun setView(view: ListBookLocalContract.View?) {

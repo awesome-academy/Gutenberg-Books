@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -13,18 +15,20 @@ import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
 import vn.ztech.software.projectgutenberg.data.model.epub.Toc
 import vn.ztech.software.projectgutenberg.data.model.epub.TocItem
+import vn.ztech.software.projectgutenberg.data.repository.source.local.kotpref.KotPref
 import vn.ztech.software.projectgutenberg.databinding.ActivityReadBookBinding
 import vn.ztech.software.projectgutenberg.di.getReadBookPresenter
 import vn.ztech.software.projectgutenberg.screen.download.DownloadFragment
 import vn.ztech.software.projectgutenberg.utils.Constant
 import vn.ztech.software.projectgutenberg.utils.base.BaseActivity
+import vn.ztech.software.projectgutenberg.utils.extension.getReadingProgressString
+import vn.ztech.software.projectgutenberg.utils.extension.getTextSizeFromSeekBarValue
 import vn.ztech.software.projectgutenberg.utils.extension.showAlertDialog
 import vn.ztech.software.projectgutenberg.utils.extension.toast
 
 class ReadBookActivity : BaseActivity<ActivityReadBookBinding>(ActivityReadBookBinding::inflate),
     TocAdapter.OnClickListener,
     WebViewHorizontal.OnCLickListener {
-
     var currentBook: BookLocal? = null
     val readBookPresenter by lazy { getReadBookPresenter(this) }
     val tocAdapter = TocAdapter(listener = this)
@@ -63,10 +67,85 @@ class ReadBookActivity : BaseActivity<ActivityReadBookBinding>(ActivityReadBookB
                 })
                 it.recyclerToc.adapter = tocAdapter
 
+                it.layoutSettings.seekBarTextSize.setOnSeekBarChangeListener(object :
+                    OnSeekBarChangeListener {
+                    override fun onProgressChanged(
+                        seekBar: SeekBar?,
+                        progress: Int,
+                        fromUser: Boolean
+                    ) {
+                        //todo leave blank
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        //todo leave blank
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        binding?.webViewReadBook?.apply {
+                            updateTextSize(seekBar?.progress)
+                            latestSettings?.let { settings ->
+                                val fontSize = getTextSizeFromSeekBarValue(seekBar?.progress)
+                                settings.fontSize = fontSize
+                                KotPref.getInstance(applicationContext).save(settings)
+                            }
+                        }
+                    }
+                })
+
+                val settings = KotPref.getInstance(applicationContext).getLatestSettings()
+                val seekBar = settings?.fromTextSizeToProgressPercentage() ?: 0
+                it.layoutSettings.seekBarTextSize.progress = seekBar
+
+                it.layoutSettings.apply {
+                    btSave.setOnClickListener { view ->
+                        applyAndSaveSettings(
+                            it.layoutSettings.layoutColorThemeSetting.
+                            chipGroupThemeColor.checkedChipId
+                        )
+                        binding?.apply {
+                            groupToolsView.visibility = View.GONE
+                            layoutSettings.viewSetting.startAnimation(
+                                AnimationUtils.loadAnimation(
+                                    this@ReadBookActivity,
+                                    R.anim.anim_top_down
+                                )
+                            )
+                            webViewReadBook.handlerToolsView.removeCallbacksAndMessages(null)
+                        }
+                    }
+                    btCancel.setOnClickListener { view ->
+                        binding?.apply {
+                            groupToolsView.visibility = View.GONE
+                            layoutSettings.viewSetting.startAnimation(
+                                AnimationUtils.loadAnimation(
+                                    this@ReadBookActivity,
+                                    R.anim.anim_top_down
+                                )
+                            )
+                            webViewReadBook.handlerToolsView.removeCallbacksAndMessages(null)
+                        }
+                    }
+                }
+
             }
 
         }
         readBookPresenter.setView(mViewObj)
+    }
+
+    private fun applyAndSaveSettings(chipId: Int) {
+        val pairColor = binding?.webViewReadBook?.latestSettings?.chipIdToThemeColor(chipId)
+        pairColor?.let { pair ->
+            binding?.webViewReadBook?.apply {
+                latestSettings?.textColor = pair.first
+                latestSettings?.backgroundColor = pair.second
+                latestSettings?.let { KotPref.getInstance(applicationContext).save(it) }
+                reloadPage()
+            }
+            binding?.layoutSettings?.layoutColorThemeSetting?.chipGroupThemeColor?.clearCheck()
+        }
+
     }
 
     override fun initData() {
@@ -90,6 +169,10 @@ class ReadBookActivity : BaseActivity<ActivityReadBookBinding>(ActivityReadBookB
                 }
             }
 
+        }
+
+        override fun onUpdateReadingProgressDone(tocItem: TocItem) {
+            tocAdapter.updateTocItem(tocItem)
         }
 
         override fun onError(e: Exception?) {
@@ -145,7 +228,16 @@ class ReadBookActivity : BaseActivity<ActivityReadBookBinding>(ActivityReadBookB
     }
 
     override fun onLoadChapterDone(tocItem: TocItem) {
+        tocAdapter.updateCurrentSelectedItem(tocItem)
+        readBookPresenter.updateLatestReadingTocItem(tocItem)
         binding?.layoutToolbar?.toolbar?.title = tocItem.title
+    }
+
+    override fun updateReadingProgress(tocItem: TocItem, currentPage: Int, totalPage: Int) {
+        readBookPresenter.updateReadingProgress(
+            tocItem,
+            getReadingProgressString(currentPage, totalPage)
+        )
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

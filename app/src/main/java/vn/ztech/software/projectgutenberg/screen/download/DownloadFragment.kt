@@ -85,7 +85,7 @@ class DownloadFragment
             context?.let {
                 listBookLocalPresenter.parseEpubFile(
                     book,
-                    getProviderUnzippedBookDirectoryPath(it, book.title)
+                    getProviderUnzippedBookDirectoryPath(book.title)
                 )
             }
         }
@@ -138,6 +138,9 @@ class DownloadFragment
                     getString(R.string.msg_fetch_data_from_storage),
                     onClickOkListener = { _, _ ->
                         fetchDataFromLocal()
+                    },
+                    onClickCancelListener = { _, _ ->
+                        binding?.swipeRefreshLayout?.isRefreshing = false
                     }
                 )
             }
@@ -148,6 +151,9 @@ class DownloadFragment
                     offset,
                     LoadingAreaDownloadedBook.DownloadedBookLoadMore
                 )
+            }
+            listBookLocalAdapter.mSetUpdateNewData { offset ->
+                listBookLocalPresenter.updateNewDataAndLoadMore(offset)
             }
 
             topAppBarHome.editTextSearch.setOnEditorActionListener { v, actionId, event ->
@@ -216,17 +222,27 @@ class DownloadFragment
             intent.putExtras(bundleOf(ReadBookActivity.BUNDLE_BOOK_LOCAL to book))
             startActivity(intent)
         } else {
-            context?.let {
-                it.showAlertDialog(
-                    resources.getString(R.string.read_book_title),
-                    resources.getString(R.string.read_book_msg),
-                    onClickOkListener = { _, _ ->
-                        listBookLocalAdapter.setLoading(book)
-                        listBookLocalPresenter.unzipBook(context, book)
-                    },
-                    onClickCancelListener = { _, _ -> }
-                )
+            if (book.isSupported()){
+                context?.let {
+                    it.showAlertDialog(
+                        resources.getString(R.string.read_book_title),
+                        resources.getString(R.string.read_book_msg),
+                        onClickOkListener = { _, _ ->
+                            listBookLocalAdapter.setLoading(book)
+                            listBookLocalPresenter.unzipBook(context, book)
+                        },
+                        onClickCancelListener = { _, _ -> }
+                    )
+                }
+            }else{
+                context?.let {
+                    it.showAlertDialog(
+                        resources.getString(R.string.title_not_supported_file_extension),
+                        String.format(resources.getString(R.string.msg_not_supported_file_extension), book.mimeType),
+                    )
+                }
             }
+
         }
 
     }
@@ -255,7 +271,7 @@ class DownloadFragment
         if (isFetchingFromStorage) {
             fetchDataFromLocal()
         }
-        listBookLocalAdapter.forceLoadMore()
+        listBookLocalAdapter.updateNewDataAndLoadMore()
     }
 
     companion object {

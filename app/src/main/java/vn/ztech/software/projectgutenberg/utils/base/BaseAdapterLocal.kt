@@ -1,6 +1,5 @@
 package vn.ztech.software.projectgutenberg.utils.base
 
-import android.util.Log
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +16,7 @@ abstract class BaseAdapterLocal<M, VH : ViewHolder>(diffCallback: DiffUtil.ItemC
             .build()
     ) {
     var handle: (Int) -> Unit = {}
+    var updateNewData: (Int) -> Unit = {}
     var loadMoreEnable = true
     fun addList(list: List<M>, action: DataAction) {
         val set = mutableSetOf<M>()
@@ -81,12 +81,15 @@ abstract class BaseAdapterLocal<M, VH : ViewHolder>(diffCallback: DiffUtil.ItemC
                         ) {
                             isLoading = true
                             handle(offset)
-                            Log.d("PAGINATEXXX", offset.toString())
                         }
                     }
                 }
             )
         }
+    }
+
+    fun mSetUpdateNewData(handleUpdate: (Int) -> Unit) {
+        updateNewData = handleUpdate
     }
 
     fun isAtLastPosition(layoutManager: LinearLayoutManager, sizeData: Int?): Boolean {
@@ -106,8 +109,8 @@ abstract class BaseAdapterLocal<M, VH : ViewHolder>(diffCallback: DiffUtil.ItemC
         isLoading = false
     }
 
-    fun forceLoadMore() {
-        handle(offset)
+    fun updateNewDataAndLoadMore() {
+        updateNewData(offset)
         /**reload previous page*/
     }
 

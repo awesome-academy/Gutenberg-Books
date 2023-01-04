@@ -1,6 +1,7 @@
 package vn.ztech.software.projectgutenberg.screen.readbook
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import vn.ztech.software.projectgutenberg.data.model.epub.Toc
@@ -17,7 +18,19 @@ class TocAdapter(val toc: Toc = Toc(), val listener: OnClickListener) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tocItem: TocItem) {
             binding.tvTitle.text = tocItem.title
-            binding.tvPercent.text = tocItem.progress.toString()
+            binding.progressBarReading.progress = tocItem.progressStringToPercentage()
+            if (tocItem.isDone()) {
+                binding.tvPercent.visibility = View.GONE
+                binding.progressBarReading.visibility = View.INVISIBLE
+                binding.ivDoneChecked.visibility = View.VISIBLE
+
+            } else {
+                binding.tvPercent.visibility = View.VISIBLE
+                binding.ivDoneChecked.visibility = View.GONE
+                binding.tvPercent.text = tocItem.getProgressToDisplay()
+                binding.progressBarReading.visibility = View.VISIBLE
+
+            }
             currentSelectedItem?.let { binding.root.isSelected = tocItem.idx == it.idx }
 
             binding.root.setOnClickListener {
@@ -43,6 +56,17 @@ class TocAdapter(val toc: Toc = Toc(), val listener: OnClickListener) :
 
     override fun getItemCount(): Int {
         return tocItems.size
+    }
+
+    fun updateTocItem(tocItem: TocItem) {
+        val idx = tocItems.indexOfFirst { it.bookId == tocItem.bookId && it.href == tocItem.href }
+        tocItems[idx] = tocItem
+        notifyItemChanged(idx)
+    }
+
+    fun updateCurrentSelectedItem(tocItem: TocItem) {
+        currentSelectedItem = tocItem
+        notifyDataSetChanged()
     }
 
     interface OnClickListener {

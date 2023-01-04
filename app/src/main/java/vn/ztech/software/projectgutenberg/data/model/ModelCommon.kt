@@ -5,4 +5,5 @@ object ModelCommon {
     const val BOOKSHELF = "BOOKSHELF"
     const val AGENT = "AGENT"
     const val RESOURCE = "RESOURCE"
+    const val SETTINGS = "SETTINGS"
 }

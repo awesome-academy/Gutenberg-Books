@@ -16,3 +16,15 @@ fun ImageView.loadImage(
         .placeholder(drawablePlaceHolder)
         .into(this)
 }
+
+fun ImageView.loadImage(
+    res: Int,
+    @DrawableRes drawablePlaceHolder: Int = R.drawable.image_book_body
+) {
+    Glide
+        .with(this)
+        .load(res)
+        .centerCrop()
+        .placeholder(drawablePlaceHolder)
+        .into(this)
+}

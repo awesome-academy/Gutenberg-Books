@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import vn.ztech.software.projectgutenberg.data.model.epub.EpubFile
 import vn.ztech.software.projectgutenberg.data.model.epub.ResourceResponse
 import vn.ztech.software.projectgutenberg.data.model.epub.TocItem
+import vn.ztech.software.projectgutenberg.utils.Constant
 
 @Parcelize
 data class BookLocal(
@@ -38,6 +39,19 @@ data class BookLocal(
         return epubFile?.getRecentReadingToc()
     }
 
+    fun getTocByWebViewUrl(url: String): TocItem? {
+        return epubFile?.getTocByWebViewUrl(url)
+    }
+
+    fun getReadingPercentage(): Int? {
+        return epubFile?.getTotalPercentage()
+    }
+    fun isSupported(): Boolean{
+        Constant.supportedResources.forEach {
+            if (this.mimeType.contains(it.fullName)) return true
+        }
+        return false
+    }
     companion object {
         const val PREPARED = 1
         const val NOT_PREPARED = 0

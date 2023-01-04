@@ -1,11 +1,11 @@
 package vn.ztech.software.projectgutenberg.screen.download
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import vn.ztech.software.projectgutenberg.R
 import vn.ztech.software.projectgutenberg.data.model.BaseDataLocal
 import vn.ztech.software.projectgutenberg.data.model.BookLocal
 import vn.ztech.software.projectgutenberg.databinding.ItemDownloadedBookBinding
@@ -36,13 +36,18 @@ class ListBookLocalAdapter(private val listener: OnClickListener) :
                 tvAuthor.text = book.mimeType.getLastPart()
                 if (book.imageUrl.isNotEmpty() && book.imageUrl != Constant.STRING_NULL)
                     ivBookCover.loadImage(book.imageUrl)
+                else
+                    ivBookCover.loadImage(R.drawable.splash)
+
                 tvSize.text = book.size.toReadableFileSize()
-                tvRecentReadingPercentage.text = book.readingProgress
 
                 if (book.prepared == BookLocal.PREPARED) {
                     groupReadingProgress.visibility = View.VISIBLE
                     tvPrepareToRead.visibility = View.GONE
-                    tvRecentReadingPercentage.text = book.readingProgress
+                    book.getReadingPercentage()?.let {
+                        progressBar.progress = it
+                        tvRecentReadingPercentage.text = it.toString()
+                    }
 
                 } else {
                     groupReadingProgress.visibility = View.GONE
@@ -51,10 +56,8 @@ class ListBookLocalAdapter(private val listener: OnClickListener) :
 
                 if (book.isProcessing) {
                     layoutLoading.layoutLoading.visibility = View.VISIBLE
-                    Log.d("LOADINGXXX", book.isProcessing.toString())
                 } else {
                     layoutLoading.layoutLoading.visibility = View.GONE
-                    Log.d("LOADINGXXX", book.isProcessing.toString())
                 }
 
                 root.setOnClickListener { listener.onItemClick(book) }
@@ -91,7 +94,8 @@ class ListBookLocalAdapter(private val listener: OnClickListener) :
         }
 
         override fun areContentsTheSame(oldItem: BookLocal, newItem: BookLocal): Boolean {
-            return oldItem == newItem
+            return oldItem == newItem && oldItem.getReadingPercentage() == newItem.getReadingPercentage()
+                    && oldItem.imageUrl == newItem.imageUrl
         }
     }
 }

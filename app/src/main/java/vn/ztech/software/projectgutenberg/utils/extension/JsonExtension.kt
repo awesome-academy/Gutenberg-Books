@@ -13,6 +13,8 @@ import vn.ztech.software.projectgutenberg.data.model.BookshelfEntry
 import vn.ztech.software.projectgutenberg.data.model.ModelCommon
 import vn.ztech.software.projectgutenberg.data.model.Resource
 import vn.ztech.software.projectgutenberg.data.model.ResourceEntry
+import vn.ztech.software.projectgutenberg.data.model.epub.Settings
+import vn.ztech.software.projectgutenberg.data.model.epub.SettingsEntry
 
 fun <T> JSONObject.parse(keyEntity: String): T {
     return when (keyEntity) {
@@ -27,23 +29,14 @@ fun <T> JSONObject.parse(keyEntity: String): T {
             val resourcesJsonArray = this.getJSONArray(BookEntry.RESOURCES)
             val subjectsJsonArray = this.getJSONArray(BookEntry.SUBJECTS)
             val title = this.getString(BookEntry.TITLE)
-
             val agents = agentsJsonArray.getObjectArray<Agent>(ModelCommon.AGENT)
             val bookshelves = bookshelvesJsonArray.getStringArray()
             val languages = languagesJSONArray.getStringArray()
             val resources = resourcesJsonArray.getObjectArray<Resource>(ModelCommon.RESOURCE)
             val subjects = subjectsJsonArray.getStringArray()
             Book(
-                agents,
-                bookshelves,
-                description,
-                downloads,
-                id,
-                languages,
-                license,
-                resources,
-                subjects,
-                title
+                agents, bookshelves, description, downloads, id,
+                languages, license, resources, subjects, title
             ) as T
         }
         ModelCommon.BOOKSHELF -> {
@@ -63,6 +56,15 @@ fun <T> JSONObject.parse(keyEntity: String): T {
             val type: String = this.getString(ResourceEntry.TYPE)
             val uri: String = this.getString(ResourceEntry.URI)
             Resource(id, type, uri) as T
+        }
+        ModelCommon.SETTINGS -> {
+            val fontSize: Int = this.optInt(SettingsEntry.FONT_SIZE, Settings.DEFAULT_VALUE_NOT_EXIST)
+            val textColor: String = this.optString(SettingsEntry.TEXT_COLOR, Settings.DEFAULT_VALUE_NOT_EXIST_STRING)
+            val backgroundColor: String = this.optString(
+                SettingsEntry.BACKGROUND_COLOR,
+                Settings.DEFAULT_VALUE_NOT_EXIST_STRING
+            )
+            Settings(fontSize, textColor, backgroundColor) as T
         }
         else -> throw JSONException(R.string.exception_parse_json.toString())
     }

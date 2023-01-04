@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_horizontal"
+        >
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupThemeColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            >
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDark"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checkable="true"
+                app:checkedIconTint="#4CAF50"
+                android:text="@string/dark"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:chipIcon="@drawable/ic_baseline_nights_stay_24"
+                app:closeIconVisible="false"
+                app:layout_constraintEnd_toStartOf="@+id/ChipLight"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipLight"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checkable="true"
+                app:checkedIconTint="#4CAF50"
+                android:text="@string/light"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:chipIcon="@drawable/ic_baseline_wb_sunny_48"
+                app:closeIconVisible="false"
+                app:layout_constraintEnd_toStartOf="@+id/ChipVintage"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/chipDark"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVintage"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checkable="true"
+                app:checkedIconTint="#4CAF50"
+                android:text="@string/vintage"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:chipIcon="@drawable/ic_baseline_menu_book_24"
+                app:closeIconVisible="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ChipLight"
+                app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,12 +24,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dp_6"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_bookshelves"
+        app:layout_constraintBottom_toTopOf="@+id/recyler_list_recent_reading_books"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:drawableEndCompat="@drawable/ic_navigate_next_24" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_bookshelves"
+        android:id="@+id/recyler_list_recent_reading_books"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dp_8"
         android:paddingVertical="@dimen/dp_4"

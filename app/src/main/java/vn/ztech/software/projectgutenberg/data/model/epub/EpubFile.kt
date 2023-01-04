@@ -171,8 +171,19 @@ class EpubFile(val basePath: String? = null) : Parcelable {
     }
 
     fun getRecentReadingToc(): TocItem {
-        val tocItem = toc.listItem.firstOrNull() { it.recentReading }
+        val tocItem = toc.listItem.firstOrNull() { it.isLatestReading == 1 }
         return tocItem ?: toc.listItem.first()
+    }
+
+    fun getTocByWebViewUrl(url: String): TocItem? {
+        return toc.listItem.firstOrNull {
+            url.contains(it.href)
+        }
+    }
+
+    fun getTotalPercentage(): Int {
+        if (toc.listItem.isEmpty()) return 0
+        return toc.getTotalPercentage()
     }
 
     companion object {

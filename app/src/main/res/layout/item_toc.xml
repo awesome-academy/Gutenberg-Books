@@ -59,10 +59,10 @@
         android:textStyle="bold"
         android:layout_margin="@dimen/dp_5"
         android:textColor="?attr/colorOnPrimary"
-        app:layout_constraintStart_toStartOf="@id/ivDoneChecked"
-        app:layout_constraintEnd_toEndOf="@id/ivDoneChecked"
-        app:layout_constraintTop_toTopOf="@id/ivDoneChecked"
-        app:layout_constraintBottom_toBottomOf="@id/ivDoneChecked"
+        app:layout_constraintStart_toStartOf="@id/progress_bar_reading"
+        app:layout_constraintEnd_toEndOf="@id/progress_bar_reading"
+        app:layout_constraintTop_toTopOf="@id/progress_bar_reading"
+        app:layout_constraintBottom_toBottomOf="@id/progress_bar_reading"
         >
     </TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

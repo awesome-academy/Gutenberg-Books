@@ -6,6 +6,8 @@ import vn.ztech.software.projectgutenberg.data.repository.source.repository.book
 fun getBookRepository(context: Context?): BookRepository {
     return BookRepository.getInstance(
         getBookRemoteDataSource(),
-        getBookLocalDataSource(context)
+        getBookLocalReadableDataSource(context),
+        getBookLocalWritableDataSource(context),
+        getBookFilesContentProvider(context)
     )
 }
